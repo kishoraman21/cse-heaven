@@ -1,7 +1,12 @@
-import LandingPage1 from "./components/LandingPage1";
+import HeroSection from "@/components/HeroSection"
 
-export default function HomePage(){
+
+export default function HomePage() {
   return (
-    <LandingPage1/>
+    <main className="flex flex-col">
+      <HeroSection />
+      {/* <LandingPage1 /> */}
+      {/* <LandingPage2 /> */}
+    </main>
   )
 }
