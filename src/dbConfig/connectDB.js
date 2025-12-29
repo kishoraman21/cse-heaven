@@ -2,9 +2,8 @@ import mongoose from "mongoose";
 
 export async function connect() {
   try {
-    const MONGODB_URL="mongodb+srv://kishoraman2121_db_user:tsCNd4fLhOKrMDjH@development.1bpvkck.mongodb.net/?appName=development"
-      console.log("MONGO_URI:", MONGODB_URL);
-    await mongoose.connect(MONGODB_URL);
+      console.log("MONGO_URI:", process.env.MONGODB_URL);
+    await mongoose.connect(process.env.MONGODB_URL);
 
     const connection = mongoose.connection;
 
