@@ -8,12 +8,14 @@ import {
   Star,
   BookOpen,
   Code,
-  Database,
+  Database,                                                                   
   Globe,
   Cpu,
   Lock,
   TrendingUp,
   Loader2,
+  CheckCircle2,
+  ShoppingCart,
 } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -26,7 +28,11 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/src/app/components/ui/select";
+} from "../components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+} from "../components/ui/dialog";
 
 const categories = [
   { id: 'all', label: 'All Resources', icon: BookOpen },
@@ -46,6 +52,7 @@ export default function PDFLibraryPage() {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -252,7 +259,10 @@ export default function PDFLibraryPage() {
                     </div>
 
                     {/* CTA Button */}
-                    <Button className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700">
+                    <Button 
+                      onClick={() => setSelectedProduct(pdf)}
+                      className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+                    >
                       View Details
                     </Button>
                   </div>
@@ -275,6 +285,110 @@ export default function PDFLibraryPage() {
           )}
         </div>
       </section>
+
+      {/* Product Detail Modal */}
+      <Dialog open={!!selectedProduct} onOpenChange={(open) => !open && setSelectedProduct(null)}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto p-0 gap-0">
+            {selectedProduct && (
+              <>
+                 <div className={`h-48 ${selectedProduct.thumbnail || 'bg-gradient-to-br from-indigo-400 to-purple-500'} relative`}>
+                    <div className="absolute inset-0 bg-black/40" />
+                    <div className="absolute bottom-6 left-6 right-6">
+                      <div className="flex gap-2 mb-2">
+                         <Badge className="bg-white/20 backdrop-blur-md text-white border-0 hover:bg-white/30">
+                            {selectedProduct.category}
+                         </Badge>
+                         <Badge className="bg-indigo-600 text-white border-0 hover:bg-indigo-700">
+                            {selectedProduct.level}
+                         </Badge>
+                      </div>
+                      <h2 className="text-3xl font-bold text-white shadow-sm">
+                        {selectedProduct.title}
+                      </h2>
+                    </div>
+                 </div>
+
+                 <div className="p-6 space-y-8">
+                    {/* Description & Meta */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="md:col-span-2 space-y-4">
+                            <h3 className="text-lg font-semibold flex items-center gap-2">
+                                <BookOpen className="w-5 h-5 text-indigo-600" />
+                                Overview
+                            </h3>
+                            <p className="text-muted-foreground leading-relaxed">
+                                {selectedProduct.description}
+                            </p>
+                        </div>
+                        <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-3">
+                             <div className="flex justify-between items-center text-sm">
+                                <span className="text-muted-foreground">Rating</span>
+                                <span className="font-semibold flex items-center gap-1">
+                                    {selectedProduct.rating} <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                                </span>
+                             </div>
+                             <div className="flex justify-between items-center text-sm">
+                                <span className="text-muted-foreground">Pages</span>
+                                <span className="font-semibold">{selectedProduct.pages}</span>
+                             </div>
+                             <div className="flex justify-between items-center text-sm">
+                                <span className="text-muted-foreground">Downloads</span>
+                                <span className="font-semibold">{selectedProduct.downloads}</span>
+                             </div>
+                        </div>
+                    </div>
+                    
+                    {/* What's Inside & Outcomes */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        {/* Contents */}
+                        <div className="space-y-4">
+                            <h3 className="text-lg font-semibold flex items-center gap-2 text-foreground">
+                                <Code className="w-5 h-5 text-indigo-600" />
+                                What's Inside
+                            </h3>
+                            <ul className="space-y-3">
+                                {selectedProduct.contents?.map((item, i) => (
+                                    <li key={i} className="flex items-start gap-3 text-sm text-muted-foreground">
+                                        <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-indigo-400 shrink-0" />
+                                        {item}
+                                    </li>
+                                )) || <p className="text-sm text-muted-foreground">Contents not listed.</p>}
+                            </ul>
+                        </div>
+
+                        {/* Outcomes */}
+                        <div className="space-y-4">
+                            <h3 className="text-lg font-semibold flex items-center gap-2 text-foreground">
+                                <CheckCircle2 className="w-5 h-5 text-green-600" />
+                                What You'll Learn
+                            </h3>
+                            <div className="space-y-3">
+                                {selectedProduct.outcomes?.map((item, i) => (
+                                    <div key={i} className="flex items-start gap-3 text-sm text-muted-foreground bg-green-50/50 p-3 rounded-lg border border-green-100/50">
+                                        <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0 mt-0.5" />
+                                        {item}
+                                    </div>
+                                )) || <p className="text-sm text-muted-foreground">Outcomes not listed.</p>}
+                            </div>
+                        </div>
+                    </div>
+                 </div>
+
+                 {/* Footer / CTA */}
+                 <div className="p-6 border-t bg-slate-50/50 flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <div className="flex flex-col">
+                        <span className="text-sm text-muted-foreground">Total Price</span>
+                        <span className="text-2xl font-bold text-foreground">{selectedProduct.price}</span>
+                    </div>
+                    <Button className="w-full sm:w-auto px-8 py-6 text-lg bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-xl hover:shadow-2xl transition-all hover:scale-105">
+                        <ShoppingCart className="w-5 h-5 mr-2" />
+                        Buy Now
+                    </Button>
+                 </div>
+              </>
+            )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
