@@ -1,70 +1,278 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import {
   Search,
-  Filter,
-  Download,
   Star,
   BookOpen,
   Code,
-  Database,                                                                   
+  CheckCircle2,
+  ShoppingCart,
+  Loader2,
+  Database,
   Globe,
   Cpu,
   Lock,
-  TrendingUp,
-  Loader2,
-  CheckCircle2,
-  ShoppingCart,
+  Braces,
+  FileCode,
 } from "lucide-react";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { Badge } from "../components/ui/badge";
-import { Card } from "../components/ui/card";
-import axios from "axios";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../components/ui/select";
-import {
-  Dialog,
-  DialogContent,
-} from "../components/ui/dialog";
+import axios from "axios"
 
-const categories = [
-  { id: 'all', label: 'All Resources', icon: BookOpen },
-  { id: 'algorithms', label: 'Algorithms', icon: Code },
-  { id: 'databases', label: 'Databases', icon: Database },
-  { id: 'web-dev', label: 'Web Development', icon: Globe },
-  { id: 'system-design', label: 'System Design', icon: Cpu },
-  { id: 'security', label: 'Security', icon: Lock },
-  { id: 'leetcode', label: 'LeetCode Problems', icon: TrendingUp },
-  { id: 'dsa', label: 'DSA', icon: Code },
-];
+// Function to get thumbnail gradient based on title
+const getThumbnailGradient = (title) => {
+  const lowerTitle = title?.toLowerCase() || "";
+  
+  if (lowerTitle.includes("dsa") || lowerTitle.includes("data structure") || lowerTitle.includes("algorithm")) {
+    return "from-indigo-500 via-purple-500 to-pink-500";
+  } else if (lowerTitle.includes("java") || lowerTitle.includes("python") || lowerTitle.includes("javascript")) {
+    return "from-orange-500 via-red-500 to-pink-500";
+  } else if (lowerTitle.includes("web") || lowerTitle.includes("html") || lowerTitle.includes("css") || lowerTitle.includes("react")) {
+    return "from-blue-500 via-cyan-500 to-teal-500";
+  } else if (lowerTitle.includes("database") || lowerTitle.includes("sql") || lowerTitle.includes("dbms")) {
+    return "from-green-500 via-emerald-500 to-teal-500";
+  } else if (lowerTitle.includes("system") || lowerTitle.includes("design")) {
+    return "from-violet-500 via-purple-500 to-indigo-500";
+  } else if (lowerTitle.includes("security") || lowerTitle.includes("cyber")) {
+    return "from-red-500 via-rose-500 to-pink-500";
+  } else if (lowerTitle.includes("operating") || lowerTitle.includes("os")) {
+    return "from-amber-500 via-orange-500 to-red-500";
+  } else if (lowerTitle.includes("network")) {
+    return "from-sky-500 via-blue-500 to-indigo-500";
+  } else if (lowerTitle.includes("machine learning") || lowerTitle.includes("ai")) {
+    return "from-fuchsia-500 via-purple-500 to-indigo-500";
+  } else if (lowerTitle.includes("leetcode") || lowerTitle.includes("interview")) {
+    return "from-rose-500 via-pink-500 to-purple-500";
+  }
+  
+  return "from-indigo-500 to-purple-600";
+};
+
+// Function to get icon based on title
+const getThumbnailIcon = (title) => {
+  const lowerTitle = title?.toLowerCase() || "";
+  
+  if (lowerTitle.includes("dsa") || lowerTitle.includes("algorithm")) {
+    return Code;
+  } else if (lowerTitle.includes("database") || lowerTitle.includes("sql")) {
+    return Database;
+  } else if (lowerTitle.includes("web") || lowerTitle.includes("html")) {
+    return Globe;
+  } else if (lowerTitle.includes("system") || lowerTitle.includes("design")) {
+    return Cpu;
+  } else if (lowerTitle.includes("security")) {
+    return Lock;
+  } else if (lowerTitle.includes("java") || lowerTitle.includes("python")) {
+    return Braces;
+  }
+  
+  return FileCode;
+};
+
+// Function to get dynamic content based on title
+const getProductContent = (product) => {
+  const lowerTitle = product.title?.toLowerCase() || "";
+  
+  // DSA Content
+  if (lowerTitle.includes("dsa") || lowerTitle.includes("data structure")) {
+    return {
+      description: product.description || "Comprehensive guide covering all data structures and algorithms with detailed examples, complexity analysis, and practice problems to master DSA fundamentals.",
+      contents: product.contents || [
+        "Arrays and Strings - Core operations and problems",
+        "Linked Lists - Single, Double, and Circular",
+        "Stacks and Queues - Implementation and applications",
+        "Trees and Graphs - Traversal and algorithms",
+        "Dynamic Programming - Optimization techniques",
+        "Sorting and Searching - Efficient algorithms"
+      ],
+      outcomes: product.outcomes || [
+        "Master fundamental data structures and their operations",
+        "Solve complex algorithmic problems efficiently",
+        "Prepare confidently for technical interviews at top companies"
+      ]
+    };
+  }
+  
+  // Java Content
+  if (lowerTitle.includes("java")) {
+    return {
+      description: product.description || "Complete Java programming guide from basics to advanced OOP concepts, covering syntax, design patterns, collections framework, and best practices for enterprise development.",
+      contents: product.contents || [
+        "Java Fundamentals - Syntax and data types",
+        "Object-Oriented Programming - Classes and inheritance",
+        "Collections Framework - Lists, Sets, and Maps",
+        "Exception Handling - Try-catch and custom exceptions",
+        "Multithreading - Concurrent programming",
+        "Java 8+ Features - Streams and Lambda expressions"
+      ],
+      outcomes: product.outcomes || [
+        "Write production-ready Java code with best practices",
+        "Understand and apply OOP principles effectively",
+        "Master advanced Java features and frameworks"
+      ]
+    };
+  }
+  
+  // Web Development Content
+  if (lowerTitle.includes("html") || lowerTitle.includes("css") || lowerTitle.includes("javascript") || lowerTitle.includes("web")) {
+    return {
+      description: product.description || "Complete web development fundamentals covering HTML5, CSS3, and modern JavaScript with hands-on examples, responsive design techniques, and real-world projects.",
+      contents: product.contents || [
+        "HTML5 Semantics - Modern markup structure",
+        "CSS3 and Flexbox - Responsive layouts",
+        "JavaScript ES6+ - Modern syntax and features",
+        "DOM Manipulation - Interactive web pages",
+        "Responsive Design - Mobile-first approach",
+        "Web APIs - Fetch, Storage, and more"
+      ],
+      outcomes: product.outcomes || [
+        "Build modern, responsive websites from scratch",
+        "Understand web standards and best practices",
+        "Create interactive user interfaces with JavaScript"
+      ]
+    };
+  }
+  
+  // Database Content
+  if (lowerTitle.includes("database") || lowerTitle.includes("sql") || lowerTitle.includes("dbms")) {
+    return {
+      description: product.description || "Comprehensive database management guide covering SQL fundamentals, relational database design, normalization, indexing, and query optimization techniques.",
+      contents: product.contents || [
+        "SQL Basics - SELECT, INSERT, UPDATE, DELETE",
+        "Database Design - ER diagrams and normalization",
+        "Joins and Subqueries - Complex data retrieval",
+        "Indexing - Performance optimization",
+        "Transactions - ACID properties",
+        "Stored Procedures - Advanced database programming"
+      ],
+      outcomes: product.outcomes || [
+        "Design efficient and scalable database schemas",
+        "Write optimized SQL queries for complex operations",
+        "Understand database internals and performance tuning"
+      ]
+    };
+  }
+  
+  // System Design Content
+  if (lowerTitle.includes("system") && lowerTitle.includes("design")) {
+    return {
+      description: product.description || "Master system design concepts including scalability, reliability, distributed systems, and architectural patterns used by top tech companies.",
+      contents: product.contents || [
+        "System Design Fundamentals - Key concepts",
+        "Scalability Patterns - Horizontal and vertical scaling",
+        "Load Balancing - Distribution strategies",
+        "Caching Strategies - Redis and Memcached",
+        "Database Sharding - Data partitioning",
+        "Microservices Architecture - Design principles"
+      ],
+      outcomes: product.outcomes || [
+        "Design scalable and reliable distributed systems",
+        "Ace system design interviews at FAANG companies",
+        "Understand trade-offs in architectural decisions"
+      ]
+    };
+  }
+  
+  // Python Content
+  if (lowerTitle.includes("python")) {
+    return {
+      description: product.description || "Complete Python programming guide covering fundamentals, data structures, OOP, libraries, and advanced topics for beginners to advanced developers.",
+      contents: product.contents || [
+        "Python Basics - Syntax and data types",
+        "Data Structures - Lists, Tuples, Dictionaries",
+        "Object-Oriented Python - Classes and methods",
+        "File Handling - Reading and writing files",
+        "Libraries - NumPy, Pandas, Matplotlib",
+        "Advanced Topics - Decorators and generators"
+      ],
+      outcomes: product.outcomes || [
+        "Write clean and efficient Python code",
+        "Master Python's data structures and libraries",
+        "Build real-world applications with Python"
+      ]
+    };
+  }
+  
+  // Operating Systems Content
+  if (lowerTitle.includes("operating") || lowerTitle.includes(" os ")) {
+    return {
+      description: product.description || "Comprehensive operating systems guide covering process management, memory management, file systems, and OS architecture with practical examples.",
+      contents: product.contents || [
+        "Process Management - Scheduling algorithms",
+        "Memory Management - Paging and segmentation",
+        "File Systems - Organization and management",
+        "Deadlocks - Prevention and detection",
+        "CPU Scheduling - Various algorithms",
+        "Synchronization - Semaphores and monitors"
+      ],
+      outcomes: product.outcomes || [
+        "Understand core operating system concepts",
+        "Master process and memory management techniques",
+        "Prepare for OS-related interview questions"
+      ]
+    };
+  }
+  
+  // LeetCode/Interview Prep Content
+  if (lowerTitle.includes("leetcode") || lowerTitle.includes("interview")) {
+    return {
+      description: product.description || "Curated collection of LeetCode problems with detailed solutions, patterns, and strategies to crack technical coding interviews at top companies.",
+      contents: product.contents || [
+        "Two Pointers Pattern - Common techniques",
+        "Sliding Window - Array and string problems",
+        "Binary Search - Optimization problems",
+        "Tree Traversals - DFS and BFS",
+        "Dynamic Programming - Popular patterns",
+        "Graph Algorithms - Common interview questions"
+      ],
+      outcomes: product.outcomes || [
+        "Solve LeetCode problems efficiently",
+        "Recognize and apply problem-solving patterns",
+        "Excel in technical coding interviews"
+      ]
+    };
+  }
+  
+  // Default fallback content
+  return {
+    description: product.description || "Comprehensive study material with detailed explanations, examples, and practice problems to master the subject.",
+    contents: product.contents || [
+      "Fundamental Concepts",
+      "Advanced Topics",
+      "Practical Examples",
+      "Problem Solving",
+      "Best Practices",
+      "Interview Preparation"
+    ],
+    outcomes: product.outcomes || [
+      "Master the fundamental concepts",
+      "Apply knowledge to real-world scenarios",
+      "Prepare for technical interviews"
+    ]
+  };
+};
 
 export default function PDFLibraryPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortBy, setSortBy] = useState("popular");
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [isModalAnimating, setIsModalAnimating] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setIsLoading(true);
         setError(null);
-        const response = await axios.get("/api/products");
-        console.log("data from api ", response.data);
-        setProducts(response.data.products || []);
+        const response = await fetch("/api/products");
+        const data = await response.json();
+        console.log("Products fetched:", data.products);
+        setProducts(data.products || []);
       } catch (error) {
         console.error("Error while fetching data", error);
-        // setError("Failed to load products. Please try again later.");
+        setError("Failed to load products. Please try again later.");
       } finally {
         setIsLoading(false);
       }
@@ -72,14 +280,81 @@ export default function PDFLibraryPage() {
     fetchProducts();
   }, []);
 
+  // Fixed handleBuy function - now expects the product ID directly
+  const handleBuy = async (productId) => {
+    if (!acceptedTerms) {
+      alert("Please accept the terms and conditions to proceed.");
+      return;
+    }
+
+    if (!productId) {
+      alert("Invalid product ID");
+      return;
+    }
+
+    try {
+      setIsDownloading(true);
+      console.log("Downloading product with ID:", productId);
+      
+      // Call the Download API with the correct field name
+      const res = await axios.post("/api/download", { 
+        productId: productId
+      });
+
+      console.log("Download response:", res.data);
+
+      const links = res.data.files; // Array of signed PDF URLs
+
+      if (!links || links.length === 0) {
+        alert("No files found for this product.");
+        return;
+      }
+
+      // Auto-open each PDF in a new tab
+      links.forEach((url, index) => {
+        setTimeout(() => {
+          window.open(url, "_blank");
+        }, index * 300); // Stagger the openings slightly
+      });
+
+      // Success message
+      alert(`Successfully opened ${links.length} file(s)!`);
+      
+      // Close modal after successful download
+      closeModal();
+      
+    } catch (err) {
+      console.error("Download error:", err);
+      const errorMessage = err.response?.data?.message || "Something went wrong while downloading.";
+      alert(errorMessage);
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
+  // Handle modal open with animation
+  const openModal = (product) => {
+    console.log("Opening modal for product:", product);
+    setSelectedProduct(product);
+    setAcceptedTerms(false);
+    setIsModalAnimating(true);
+  };
+
+  // Handle modal close with animation
+  const closeModal = () => {
+    setIsModalAnimating(false);
+    setTimeout(() => {
+      setSelectedProduct(null);
+      setAcceptedTerms(false);
+    }, 200);
+  };
+
   const filteredPDFs = products
     .filter((pdf) => {
       const matchesSearch =
         pdf.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         pdf.description?.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesCategory =
-        selectedCategory === "all" || pdf.category === selectedCategory;
-      return matchesSearch && matchesCategory;
+      return matchesSearch;
     })
     .sort((a, b) => {
       if (sortBy === "popular") return (b.downloads || 0) - (a.downloads || 0);
@@ -89,13 +364,13 @@ export default function PDFLibraryPage() {
     });
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-blue-50/30">
+    <div className="min-h-screen bg-muted/30">
       {/* Header */}
-      <section className="pt-32 pb-16 px-4 sm:px-6 lg:px-8">
+      <section className="pt-32 pb-16 px-4 sm:px-6 lg:px-8 bg-background border-b border-border">
         <div className="max-w-7xl mx-auto text-center">
-          <Badge className="mb-4 px-4 py-1.5 bg-gradient-to-r from-indigo-500 to-purple-500 text-white border-0">
+          <div className="inline-flex items-center px-4 py-1.5 mb-4 rounded-full bg-indigo-600 text-white text-sm font-medium">
             {isLoading ? "Loading..." : `${products.length}+ Premium Resources`}
-          </Badge>
+          </div>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-6">
             Browse Our Library
           </h1>
@@ -107,66 +382,27 @@ export default function PDFLibraryPage() {
       </section>
 
       {/* Search & Filters */}
-      <section className="px-4 sm:px-6 lg:px-8 pb-12">
+      <section className="px-4 sm:px-6 lg:px-8 py-8 bg-background">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
             {/* Search Bar */}
-            <div className="relative flex-1">
+            <div className="relative flex-1 max-w-2xl">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-              <Input
+              <input
                 type="text"
                 placeholder="Search for PDFs..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-12 h-12 bg-background"
                 disabled={isLoading}
+                className="w-full pl-12 pr-4 h-12 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-foreground placeholder:text-muted-foreground"
               />
             </div>
-
-            {/* Sort Dropdown */}
-            <Select value={sortBy} onValueChange={setSortBy} disabled={isLoading}>
-              <SelectTrigger className="w-full md:w-[180px] h-12 bg-background">
-                <SelectValue placeholder="Sort by" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="popular">Most Popular</SelectItem>
-                <SelectItem value="rating">Highest Rated</SelectItem>
-                <SelectItem value="recent">Most Recent</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-      </section>
-
-      {/* Categories */}
-      <section className="px-4 sm:px-6 lg:px-8 pb-12">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-hide">
-            {categories.map((category) => {
-              const Icon = category.icon;
-              const isActive = selectedCategory === category.id;
-              return (
-                <button
-                  key={category.id}
-                  onClick={() => setSelectedCategory(category.id)}
-                  disabled={isLoading}
-                  className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium whitespace-nowrap transition-all ${
-                    isActive
-                      ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg"
-                      : "bg-card text-muted-foreground hover:text-foreground border border-border hover:border-indigo-300"
-                  } ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
-                >
-                  <Icon className="w-4 h-4" />
-                  {category.label}
-                </button>
-              );
-            })}
           </div>
         </div>
       </section>
 
       {/* PDF Grid */}
-      <section className="px-4 sm:px-6 lg:px-8 pb-20">
+      <section className="px-4 sm:px-6 lg:px-8 py-12">
         <div className="max-w-7xl mx-auto">
           {/* Loading State */}
           {isLoading && (
@@ -188,12 +424,12 @@ export default function PDFLibraryPage() {
               <h3 className="text-xl font-semibold text-foreground mb-2">
                 {error}
               </h3>
-              <Button 
-                onClick={() => window.location.reload()} 
-                className="mt-4 bg-gradient-to-r from-indigo-600 to-purple-600"
+              <button
+                onClick={() => window.location.reload()}
+                className="mt-4 px-6 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700"
               >
                 Retry
-              </Button>
+              </button>
             </div>
           )}
 
@@ -211,63 +447,46 @@ export default function PDFLibraryPage() {
           {/* Grid */}
           {!isLoading && !error && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredPDFs.map((pdf) => (
-                <Card
-                  key={pdf.id}
-                  className="group overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 bg-card border-border"
-                >
-                  {/* Thumbnail */}
+              {filteredPDFs.map((pdf) => {
+                const ThumbnailIcon = getThumbnailIcon(pdf.title);
+                return (
                   <div
-                    className={`h-48 ${pdf.thumbnail || 'bg-gradient-to-br from-indigo-400 to-purple-500'} relative overflow-hidden`}
+                    key={pdf._id}
+                    className="group overflow-hidden rounded-lg border border-border bg-card hover:shadow-lg transition-all duration-200 cursor-pointer"
+                    onClick={() => openModal(pdf)}
                   >
-                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors" />
-                    <div className="absolute top-4 right-4">
-                      <Badge className="bg-white/90 text-gray-900 border-0 font-semibold">
-                        {pdf.price || 'Free'}
-                      </Badge>
+                    {/* Thumbnail with custom gradient and icon */}
+                    <div className={`h-48 bg-gradient-to-br ${getThumbnailGradient(pdf.title)} relative overflow-hidden`}>
+                      <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors" />
+                      
+                      {/* Large Icon */}
+                      <div className="absolute inset-0 flex items-center justify-center opacity-20">
+                        <ThumbnailIcon className="w-32 h-32 text-white" strokeWidth={1} />
+                      </div>
+                      
+                      <div className="absolute top-4 right-4">
+                        <div className="px-3 py-1 rounded-full bg-white text-gray-900 text-sm font-semibold shadow-sm">
+                          {pdf.price || "₹499"}
+                        </div>
+                      </div>
                     </div>
-                    <div className="absolute bottom-4 left-4 right-4">
-                      <Badge className="bg-white/20 backdrop-blur-md text-white border-0">
-                        {pdf.level || 'All Levels'}
-                      </Badge>
+
+                    {/* Content */}
+                    <div className="p-6">
+                      <h3 className="text-xl font-bold text-foreground mb-2 line-clamp-1">
+                        {pdf.title || "Untitled"}
+                      </h3>
+                      <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
+                        {pdf.description || "No description available"}
+                      </p>
+
+                      <button className="w-full px-4 py-2.5 bg-foreground text-background rounded-lg font-medium hover:opacity-90 transition-opacity">
+                        View Details
+                      </button>
                     </div>
                   </div>
-
-                  {/* Content */}
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-indigo-600 transition-colors">
-                      {pdf.title || 'Untitled'}
-                    </h3>
-                    <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
-                      {pdf.description || 'No description available'}
-                    </p>
-
-                    {/* Meta Info */}
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
-                      <div className="flex items-center gap-1">
-                        <BookOpen className="w-4 h-4" />
-                        <span>{pdf.pages || 0} pages</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Download className="w-4 h-4" />
-                        <span>{((pdf.downloads || 0) / 1000).toFixed(1)}k</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <span>{pdf.rating || 0}</span>
-                      </div>
-                    </div>
-
-                    {/* CTA Button */}
-                    <Button 
-                      onClick={() => setSelectedProduct(pdf)}
-                      className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
-                    >
-                      View Details
-                    </Button>
-                  </div>
-                </Card>
-              ))}
+                );
+              })}
             </div>
           )}
 
@@ -278,117 +497,172 @@ export default function PDFLibraryPage() {
               <h3 className="text-xl font-semibold text-foreground mb-2">
                 No PDFs found
               </h3>
-              <p className="text-muted-foreground">
-                Try adjusting your search or filters
-              </p>
+              <p className="text-muted-foreground">Try adjusting your search</p>
             </div>
           )}
         </div>
       </section>
 
-      {/* Product Detail Modal */}
-      <Dialog open={!!selectedProduct} onOpenChange={(open) => !open && setSelectedProduct(null)}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto p-0 gap-0">
-            {selectedProduct && (
-              <>
-                 <div className={`h-48 ${selectedProduct.thumbnail || 'bg-gradient-to-br from-indigo-400 to-purple-500'} relative`}>
-                    <div className="absolute inset-0 bg-black/40" />
-                    <div className="absolute bottom-6 left-6 right-6">
-                      <div className="flex gap-2 mb-2">
-                         <Badge className="bg-white/20 backdrop-blur-md text-white border-0 hover:bg-white/30">
-                            {selectedProduct.category}
-                         </Badge>
-                         <Badge className="bg-indigo-600 text-white border-0 hover:bg-indigo-700">
-                            {selectedProduct.level}
-                         </Badge>
+      {/* Product Detail Modal with Animation */}
+      {selectedProduct && (
+        <div
+          className={`fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 transition-opacity duration-200 ${
+            isModalAnimating ? 'opacity-100' : 'opacity-0'
+          }`}
+          onClick={closeModal}
+        >
+          <div
+            className={`bg-card rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transition-all duration-200 ${
+              isModalAnimating ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+            }`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header with Thumbnail */}
+            <div className={`h-52 bg-gradient-to-br ${getThumbnailGradient(selectedProduct.title)} relative`}>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+              
+              {/* Large Icon in Background */}
+              <div className="absolute inset-0 flex items-center justify-center opacity-20">
+                {(() => {
+                  const Icon = getThumbnailIcon(selectedProduct.title);
+                  return <Icon className="w-40 h-40 text-white" strokeWidth={1} />;
+                })()}
+              </div>
+              
+              <div className="absolute bottom-6 left-6 right-6">
+                <h2 className="text-3xl font-bold text-white drop-shadow-lg">
+                  {selectedProduct.title}
+                </h2>
+                <p className="text-white/80 text-sm mt-2">
+                  Product ID: {selectedProduct._id}
+                </p>
+              </div>
+            </div>
+
+            <div className="p-8 space-y-8">
+              {/* Overview & Stats */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="lg:col-span-2 space-y-4">
+                  <h3 className="text-lg font-semibold flex items-center gap-2 text-foreground">
+                    <BookOpen className="w-5 h-5 text-indigo-600" />
+                    Overview
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {getProductContent(selectedProduct).description}
+                  </p>
+                </div>
+
+                {/* Stats Card */}
+                <div className="bg-muted/50 h-15 p-4 rounded-lg border border-border space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-muted-foreground text-sm">Pages</span>
+                    <span className="font-semibold text-foreground">
+                      {selectedProduct.pages || 250}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* What's Inside & What You'll Learn */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* What's Inside */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold flex items-center gap-2 text-foreground">
+                    <Code className="w-5 h-5 text-indigo-600" />
+                    What's Inside
+                  </h3>
+                  <ul className="space-y-3">
+                    {getProductContent(selectedProduct).contents.map((item, i) => (
+                      <li
+                        key={i}
+                        className="flex items-start gap-3 text-sm text-muted-foreground"
+                      >
+                        <div className="mt-1.5 w-2 h-2 rounded-full bg-indigo-500 shrink-0" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* What You'll Learn */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold flex items-center gap-2 text-foreground">
+                    <CheckCircle2 className="w-5 h-5 text-green-600" />
+                    What You'll Learn
+                  </h3>
+                  <div className="space-y-3">
+                    {getProductContent(selectedProduct).outcomes.map((item, i) => (
+                      <div
+                        key={i}
+                        className="flex items-start gap-3 text-sm text-muted-foreground bg-green-50 dark:bg-green-950/20 p-3 rounded-lg border border-green-100 dark:border-green-800"
+                      >
+                        <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0 mt-0.5" />
+                        {item}
                       </div>
-                      <h2 className="text-3xl font-bold text-white shadow-sm">
-                        {selectedProduct.title}
-                      </h2>
-                    </div>
-                 </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
 
-                 <div className="p-6 space-y-8">
-                    {/* Description & Meta */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div className="md:col-span-2 space-y-4">
-                            <h3 className="text-lg font-semibold flex items-center gap-2">
-                                <BookOpen className="w-5 h-5 text-indigo-600" />
-                                Overview
-                            </h3>
-                            <p className="text-muted-foreground leading-relaxed">
-                                {selectedProduct.description}
-                            </p>
-                        </div>
-                        <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-3">
-                             <div className="flex justify-between items-center text-sm">
-                                <span className="text-muted-foreground">Rating</span>
-                                <span className="font-semibold flex items-center gap-1">
-                                    {selectedProduct.rating} <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                                </span>
-                             </div>
-                             <div className="flex justify-between items-center text-sm">
-                                <span className="text-muted-foreground">Pages</span>
-                                <span className="font-semibold">{selectedProduct.pages}</span>
-                             </div>
-                             <div className="flex justify-between items-center text-sm">
-                                <span className="text-muted-foreground">Downloads</span>
-                                <span className="font-semibold">{selectedProduct.downloads}</span>
-                             </div>
-                        </div>
-                    </div>
-                    
-                    {/* What's Inside & Outcomes */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {/* Contents */}
-                        <div className="space-y-4">
-                            <h3 className="text-lg font-semibold flex items-center gap-2 text-foreground">
-                                <Code className="w-5 h-5 text-indigo-600" />
-                                What's Inside
-                            </h3>
-                            <ul className="space-y-3">
-                                {selectedProduct.contents?.map((item, i) => (
-                                    <li key={i} className="flex items-start gap-3 text-sm text-muted-foreground">
-                                        <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-indigo-400 shrink-0" />
-                                        {item}
-                                    </li>
-                                )) || <p className="text-sm text-muted-foreground">Contents not listed.</p>}
-                            </ul>
-                        </div>
+              {/* Terms and Conditions Checkbox */}
+              <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
+                <label className="flex items-start gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={acceptedTerms}
+                    onChange={(e) => setAcceptedTerms(e.target.checked)}
+                    className="mt-1 w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                  />
+                  <span className="text-sm text-muted-foreground">
+                    I agree to the{" "}
+                    <a href="/terms" className="text-indigo-600 hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                      Terms & Conditions
+                    </a>
+                    {" "}and{" "}
+                    <a href="/refund" className="text-indigo-600 hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                      Refund Policy
+                    </a>
+                    . I understand that all sales are final for digital products.
+                  </span>
+                </label>
+              </div>
+            </div>
 
-                        {/* Outcomes */}
-                        <div className="space-y-4">
-                            <h3 className="text-lg font-semibold flex items-center gap-2 text-foreground">
-                                <CheckCircle2 className="w-5 h-5 text-green-600" />
-                                What You'll Learn
-                            </h3>
-                            <div className="space-y-3">
-                                {selectedProduct.outcomes?.map((item, i) => (
-                                    <div key={i} className="flex items-start gap-3 text-sm text-muted-foreground bg-green-50/50 p-3 rounded-lg border border-green-100/50">
-                                        <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0 mt-0.5" />
-                                        {item}
-                                    </div>
-                                )) || <p className="text-sm text-muted-foreground">Outcomes not listed.</p>}
-                            </div>
-                        </div>
-                    </div>
-                 </div>
-
-                 {/* Footer / CTA */}
-                 <div className="p-6 border-t bg-slate-50/50 flex flex-col sm:flex-row justify-between items-center gap-4">
-                    <div className="flex flex-col">
-                        <span className="text-sm text-muted-foreground">Total Price</span>
-                        <span className="text-2xl font-bold text-foreground">{selectedProduct.price}</span>
-                    </div>
-                    <Button className="w-full sm:w-auto px-8 py-6 text-lg bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-xl hover:shadow-2xl transition-all hover:scale-105">
-                        <ShoppingCart className="w-5 h-5 mr-2" />
-                        Buy Now
-                    </Button>
-                 </div>
-              </>
-            )}
-        </DialogContent>
-      </Dialog>
+            {/* Footer / CTA */}
+            <div className="p-6 border-t border-border bg-muted/30 flex flex-col sm:flex-row justify-between items-center gap-4">
+              <div className="flex flex-col">
+                <span className="text-sm text-muted-foreground">
+                  Total Price
+                </span>
+                <span className="text-3xl font-bold text-foreground">
+                  {selectedProduct.price || "₹499"}
+                </span>
+              </div>
+              <button 
+                onClick={() => handleBuy(selectedProduct._id)}
+                disabled={!acceptedTerms || isDownloading}
+                className={`w-full sm:w-auto px-8 py-3.5 rounded-lg font-semibold transition-all flex items-center justify-center gap-2 ${
+                  acceptedTerms && !isDownloading
+                    ? 'bg-foreground text-background hover:opacity-90' 
+                    : 'bg-muted text-muted-foreground cursor-not-allowed'
+                }`}
+              >
+                {isDownloading ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Downloading...
+                  </>
+                ) : (
+                  <>
+                    <ShoppingCart className="w-5 h-5" />
+                    Buy Now
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
