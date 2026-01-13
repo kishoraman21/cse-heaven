@@ -38,7 +38,7 @@ const features = [
   {
     id: 3,
     icon: RefreshCw,
-    title: "Lifetime Updates",
+    title: "Lifetime Access",
     description:
       "Buy once, access forever. All future updates included at no extra cost.",
     gradient: "from-rose-500 to-red-500",
