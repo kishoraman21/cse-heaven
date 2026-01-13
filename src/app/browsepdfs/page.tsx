@@ -138,17 +138,18 @@ export default function PDFLibraryPage() {
   const [userEmail, setUserEmail] = useState<string>("");
   const [showToast, setShowToast] = useState<boolean>(false);
 
-  useEffect(() => {
+   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setIsLoading(true);
         setError(null);
-        const response = await fetch("/api/products");
-        const data = await response.json();
-        console.log("Products fetched:", data.products);
-        setProducts(data.products || []);
-      } catch (error) {
-        console.error("Error while fetching data", error);
+        
+        const response = await axios.get<{ products: Product[] }>("/api/products");
+        
+        console.log("Products fetched:", response.data.products);
+        setProducts(response.data.products || []);
+      } catch (err) {
+        console.error("Error while fetching data", err);
         setError("Failed to load products. Please try again later.");
         toast.error("Cannot complete the request now. Please try again later.");
       } finally {
