@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
-import { BookOpen, Menu, X, ChevronDown } from "lucide-react";
+import { motion } from "framer-motion";
+import { BookOpen, Menu, ChevronDown } from "lucide-react";
 import { Button } from "@/src/app/components/ui/button";
 import { useRouter } from "next/navigation";
 import {
@@ -21,36 +21,42 @@ import {
 } from "@/src/app/components/ui/dropdown-menu";
 import { ModeToggle } from "@/src/app/components/ModeToggle";
 
-const navLinks = [
+
+interface SubLink {
+  label: string;
+  href: string;
+}
+
+interface NavLink {
+  label: string;
+  href: string;
+  subLinks?: SubLink[];
+}
+
+const navLinks: NavLink[] = [
   { label: "Home", href: "/" },
-  // {
-  //   label: "Categories",
-  //   href: "/categories",
-  //   subLinks: [
-  //     { label: "Databases", href: "/categories/databases" },
-  //     { label: "Algorithms", href: "/categories/algorithms" },
-  //     { label: "System Design", href: "/categories/system-design" },
-  //     { label: "Programming Languages", href: "/categories/languages" },
-  //   ],
-  // },
-  // { label: "Pricing", href: "/pricing" },
-  // { label: "Blog", href: "/blog" },
+  // Example of how to add sublinks safely in the future:
+  // { 
+  //   label: "Resources", 
+  //   href: "#", 
+  //   subLinks: [{ label: "Data Structures", href: "/dsa" }] 
+  // }
 ];
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState<boolean>(false);
+  const [mobileOpen, setMobileOpen] = useState<boolean>(false);
   const router = useRouter();
 
   useEffect(() => {
-    const handleScroll = () => {
+    const handleScroll = (): void => {
       setScrolled(window.scrollY > 20);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleBrowse = () => {
+  const handleBrowse = (): void => {
     router.push("/pdflibrarysection");
   };
 
@@ -67,13 +73,14 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
+          
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
             <div className="relative">
               <BookOpen className="w-7 h-7 text-indigo-600 transition-transform group-hover:scale-110" />
               <div className="absolute inset-0 bg-indigo-600/20 blur-xl group-hover:bg-indigo-600/30 transition-all" />
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="text-xl font-bold bg-linear-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
               CSELibrary
             </span>
           </Link>
@@ -83,14 +90,14 @@ export default function Navbar() {
             {navLinks.map((link) =>
               link.subLinks ? (
                 <DropdownMenu key={link.label}>
-                  <DropdownMenuTrigger className="flex items-center gap-1 text-gray-700 hover:text-indigo-600 font-medium transition-colors group">
+                  <DropdownMenuTrigger className="flex items-center gap-1 text-gray-700 hover:text-indigo-600 font-medium transition-colors group outline-none">
                     {link.label}
                     <ChevronDown className="w-4 h-4 transition-transform group-data-[state=open]:rotate-180" />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start" className="w-48">
                     {link.subLinks.map((subLink) => (
                       <DropdownMenuItem key={subLink.label} asChild>
-                        <Link href={subLink.href} className="cursor-pointer">
+                        <Link href={subLink.href} className="cursor-pointer w-full">
                           {subLink.label}
                         </Link>
                       </DropdownMenuItem>
@@ -113,12 +120,9 @@ export default function Navbar() {
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center gap-3">
             <ModeToggle />
-            {/* <Button variant="ghost" asChild className="font-medium">
-              <Link href="/login">Sign In</Link>
-            </Button> */}
             <Button
               asChild
-              className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-lg shadow-indigo-500/30"
+              className="bg-linear-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-lg shadow-indigo-500/30"
             >
               <Link href="/browsepdfs">Browse PDFs</Link>
             </Button>
@@ -134,9 +138,9 @@ export default function Navbar() {
             <SheetContent side="right" className="w-[300px] sm:w-[400px]">
               <SheetHeader>
                 <SheetTitle>
-                  <Link href="/" className="flex items-center gap-2">
+                  <Link href="/" className="flex items-center gap-2" onClick={() => setMobileOpen(false)}>
                     <BookOpen className="w-6 h-6 text-indigo-600" />
-                    <span className="text-lg font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                    <span className="text-lg font-bold bg-linear-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                       CSELibrary
                     </span>
                   </Link>
@@ -178,13 +182,13 @@ export default function Navbar() {
 
                 <div className="flex flex-col gap-2 pt-4 border-t">
                   <Button variant="outline" asChild className="w-full">
-                    <Link href="/login">Sign In</Link>
+                    <Link href="/login" onClick={() => setMobileOpen(false)}>Sign In</Link>
                   </Button>
                   <Button
                     asChild
-                    className="w-full bg-gradient-to-r from-indigo-600 to-purple-600"
+                    className="w-full bg-linear-to-r from-indigo-600 to-purple-600"
                   >
-                    <Link href="/signup">Get Started</Link>
+                    <Link href="/signup" onClick={() => setMobileOpen(false)}>Get Started</Link>
                   </Button>
                 </div>
               </div>

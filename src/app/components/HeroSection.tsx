@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import {
@@ -10,12 +11,26 @@ import {
   Zap,
   Shield,
   Download,
+  LucideIcon,
 } from "lucide-react";
 import { Button } from "@/src/app/components/ui/button";
 import { Badge } from "@/src/app/components/ui/badge";
 import { Card } from "@/src/app/components/ui/card";
 
-const features = [
+
+interface HeroFeature {
+  icon: LucideIcon;
+  label: string;
+  color: string;
+}
+
+interface PopularTopic {
+  name: string;
+  count: string;
+  gradient: string;
+}
+
+const features: HeroFeature[] = [
   {
     icon: Zap,
     label: "Instant Access",
@@ -33,7 +48,7 @@ const features = [
   },
 ];
 
-const popularTopics = [
+const popularTopics: PopularTopic[] = [
   {
     name: "System Design",
     count: "120+ PDFs",
@@ -58,7 +73,7 @@ const popularTopics = [
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-screen  bg-background text-foreground flex items-center justify-center pt-24 pb-20 overflow-hidden">
+    <section className="relative min-h-screen bg-background text-foreground flex items-center justify-center pt-24 pb-20 overflow-hidden">
       {/* Dot Pattern Background */}
       <div className="absolute inset-0 bg-background">
         <div
@@ -197,7 +212,6 @@ export default function HeroSection() {
                 className="cursor-pointer"
               >
                 <Card className="relative h-full p-6 bg-card hover:shadow-xl transition-all duration-300 border-2 border-border hover:border-indigo-200 overflow-hidden group">
-                  {/* Gradient Background on Hover */}
                   <div
                     className={`absolute inset-0 bg-gradient-to-br ${topic.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}
                   />
@@ -226,75 +240,66 @@ export default function HeroSection() {
         </motion.div>
 
         {/* Social Proof Section */}
-       <motion.div
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.5, delay: 0.9 }}
-  className="mt-20 flex justify-center"
->
-  <div className="inline-flex flex-col sm:flex-row items-center gap-8 rounded-2xl border border-border bg-card/80 backdrop-blur px-8 py-6 shadow-sm">
-    
-    {/* Students */}
-    <div className="flex items-center gap-4">
-      <div className="flex -space-x-3">
-        {[1, 2, 3, 4, 5].map((i) => (
-          <div
-            key={i}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-gradient-to-br from-indigo-500 to-purple-500 text-xs font-bold text-white"
-          >
-            {i === 3 ? "12K" : ""}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.9 }}
+          className="mt-20 flex justify-center"
+        >
+          <div className="inline-flex flex-col sm:flex-row items-center gap-8 rounded-2xl border border-border bg-card/80 backdrop-blur px-8 py-6 shadow-sm">
+            {/* Students */}
+            <div className="flex items-center gap-4">
+              <div className="flex -space-x-3">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div
+                    key={i}
+                    className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-gradient-to-br from-indigo-500 to-purple-500 text-xs font-bold text-white"
+                  >
+                    {i === 3 ? "12K" : ""}
+                  </div>
+                ))}
+              </div>
+              <div className="text-left">
+                <p className="text-sm font-semibold text-foreground">
+                  12,000+ Students
+                </p>
+                <p className="text-xs text-muted-foreground">Learning daily</p>
+              </div>
+            </div>
+
+            <div className="hidden h-12 w-px bg-border sm:block" />
+
+            {/* Downloads */}
+            <div className="flex items-center gap-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-yellow-400 to-orange-500">
+                <Download className="h-6 w-6 text-white" />
+              </div>
+              <div className="text-left">
+                <p className="text-sm font-semibold text-foreground">
+                  50K+ Downloads
+                </p>
+                <p className="text-xs text-muted-foreground">This month</p>
+              </div>
+            </div>
+
+            <div className="hidden h-12 w-px bg-border sm:block" />
+
+            {/* Rating */}
+            <div className="flex items-center gap-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-green-400 to-emerald-500">
+                <Award className="h-6 w-6 text-white" />
+              </div>
+              <div className="text-left">
+                <p className="text-sm font-semibold text-foreground">
+                  4.9 / 5 Rating
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  From verified reviews
+                </p>
+              </div>
+            </div>
           </div>
-        ))}
-      </div>
-      <div className="text-left">
-        <p className="text-sm font-semibold text-foreground">
-          12,000+ Students
-        </p>
-        <p className="text-xs text-muted-foreground">
-          Learning daily
-        </p>
-      </div>
-    </div>
-
-    {/* Divider */}
-    <div className="hidden h-12 w-px bg-border sm:block" />
-
-    {/* Downloads */}
-    <div className="flex items-center gap-4">
-      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-yellow-400 to-orange-500">
-        <Download className="h-6 w-6 text-white" />
-      </div>
-      <div className="text-left">
-        <p className="text-sm font-semibold text-foreground">
-          50K+ Downloads
-        </p>
-        <p className="text-xs text-muted-foreground">
-          This month
-        </p>
-      </div>
-    </div>
-
-    {/* Divider */}
-    <div className="hidden h-12 w-px bg-border sm:block" />
-
-    {/* Rating */}
-    <div className="flex items-center gap-4">
-      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-green-400 to-emerald-500">
-        <Award className="h-6 w-6 text-white" />
-      </div>
-      <div className="text-left">
-        <p className="text-sm font-semibold text-foreground">
-          4.9 / 5 Rating
-        </p>
-        <p className="text-xs text-muted-foreground">
-          From verified reviews
-        </p>
-      </div>
-    </div>
-
-  </div>
-</motion.div>
-
+        </motion.div>
       </div>
 
       <style jsx>{`
@@ -313,15 +318,12 @@ export default function HeroSection() {
             transform: translate(50px, 50px) scale(1.05);
           }
         }
-
         .animate-blob {
           animation: blob 7s infinite;
         }
-
         .animation-delay-2000 {
           animation-delay: 2s;
         }
-
         .animation-delay-4000 {
           animation-delay: 4s;
         }

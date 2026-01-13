@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
+
+import React, { useEffect, useState } from "react";
 import {
   Search,
   Star,
@@ -15,12 +16,35 @@ import {
   Braces,
   FileCode,
   X,
+  LucideIcon,
 } from "lucide-react";
 import axios from "axios";
 import { toast } from "sonner";
 
-// Function to get thumbnail gradient based on title
-const getThumbnailGradient = (title) => {
+
+interface Product {
+  _id: string;
+  id?: number; // Used in sorting logic
+  title: string;
+  description?: string;
+  price?: string;
+  pages?: string | number;
+  counts?: string | number;
+  downloads?: number;
+  rating?: number;
+  contents?: string[];
+  outcomes?: string[];
+}
+
+interface ProductContent {
+  description: string;
+  contents: string[];
+  outcomes: string[];
+}
+
+// --- Helper Functions ---
+
+const getThumbnailGradient = (title: string | undefined): string => {
   const lowerTitle = title?.toLowerCase() || "";
 
   if (
@@ -71,8 +95,7 @@ const getThumbnailGradient = (title) => {
   return "from-indigo-500 to-purple-600";
 };
 
-// Function to get icon based on title
-const getThumbnailIcon = (title) => {
+const getThumbnailIcon = (title: string | undefined): LucideIcon => {
   const lowerTitle = title?.toLowerCase() || "";
 
   if (lowerTitle.includes("dsa") || lowerTitle.includes("algorithm")) {
@@ -92,9 +115,7 @@ const getThumbnailIcon = (title) => {
   return FileCode;
 };
 
-// Function to get dynamic content based on title
-const getProductContent = (product) => {
-  // Return product data from API, no hardcoded fallbacks
+const getProductContent = (product: Product): ProductContent => {
   return {
     description: product.description || "No description available",
     contents: product.contents || [],
@@ -102,18 +123,20 @@ const getProductContent = (product) => {
   };
 };
 
+// --- Page Component ---
+
 export default function PDFLibraryPage() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState("popular");
-  const [products, setProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [acceptedTerms, setAcceptedTerms] = useState(false);
-  const [isModalAnimating, setIsModalAnimating] = useState(false);
-  const [isDownloading, setIsDownloading] = useState(false);
-  const [userEmail, setUserEmail] = useState("");
-  const [showToast, setShowToast] = useState(false);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [sortBy, setSortBy] = useState<string>("popular");
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [acceptedTerms, setAcceptedTerms] = useState<boolean>(false);
+  const [isModalAnimating, setIsModalAnimating] = useState<boolean>(false);
+  const [isDownloading, setIsDownloading] = useState<boolean>(false);
+  const [userEmail, setUserEmail] = useState<string>("");
+  const [showToast, setShowToast] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -135,8 +158,7 @@ export default function PDFLibraryPage() {
     fetchProducts();
   }, []);
 
-  // Fixed handleBuy function - now expects the product ID directly
-  const handleBuy = async (productId) => {
+  const handleBuy = async (productId: string) => {
     if (!acceptedTerms) {
       toast.error("Please accept the Terms & Conditions.");
       return;
@@ -162,8 +184,7 @@ export default function PDFLibraryPage() {
     }
   };
 
-  // Handle modal open with animation
-  const openModal = (product) => {
+  const openModal = (product: Product) => {
     console.log("Opening modal for product:", product);
     setSelectedProduct(product);
     setAcceptedTerms(false);
@@ -171,7 +192,6 @@ export default function PDFLibraryPage() {
     setIsModalAnimating(true);
   };
 
-  // Handle modal close with animation
   const closeModal = () => {
     setIsModalAnimating(false);
     setTimeout(() => {
@@ -191,7 +211,7 @@ export default function PDFLibraryPage() {
     .sort((a, b) => {
       if (sortBy === "popular") return (b.downloads || 0) - (a.downloads || 0);
       if (sortBy === "rating") return (b.rating || 0) - (a.rating || 0);
-      if (sortBy === "recent") return (b.id || 0) - (a.id || 0);
+      if (sortBy === "recent") return (Number(b.id) || 0) - (Number(a.id) || 0);
       return 0;
     });
 
@@ -217,14 +237,15 @@ export default function PDFLibraryPage() {
       <section className="px-4 sm:px-6 lg:px-8 py-8 bg-background">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-            {/* Search Bar */}
             <div className="relative flex-1 max-w-2xl">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               <input
                 type="text"
                 placeholder="Search for PDFs..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setSearchQuery(e.target.value)
+                }
                 disabled={isLoading}
                 className="w-full pl-12 pr-4 h-12 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-foreground placeholder:text-muted-foreground"
               />
@@ -236,7 +257,6 @@ export default function PDFLibraryPage() {
       {/* PDF Grid */}
       <section className="px-4 sm:px-6 lg:px-8 py-12">
         <div className="max-w-7xl mx-auto">
-          {/* Loading State */}
           {isLoading && (
             <div className="text-center py-20">
               <Loader2 className="w-16 h-16 text-indigo-600 mx-auto mb-4 animate-spin" />
@@ -249,7 +269,6 @@ export default function PDFLibraryPage() {
             </div>
           )}
 
-          {/* Error State */}
           {error && !isLoading && (
             <div className="text-center py-20">
               <BookOpen className="w-16 h-16 text-red-500 mx-auto mb-4" />
@@ -265,7 +284,6 @@ export default function PDFLibraryPage() {
             </div>
           )}
 
-          {/* Results Count */}
           {!isLoading && !error && (
             <p className="text-muted-foreground mb-6">
               Showing{" "}
@@ -276,7 +294,6 @@ export default function PDFLibraryPage() {
             </p>
           )}
 
-          {/* Grid */}
           {!isLoading && !error && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredPDFs.map((pdf) => {
@@ -287,30 +304,24 @@ export default function PDFLibraryPage() {
                     className="group overflow-hidden rounded-lg border border-border bg-card hover:shadow-lg transition-all duration-200 cursor-pointer"
                     onClick={() => openModal(pdf)}
                   >
-                    {/* Thumbnail with custom gradient and icon */}
                     <div
-                      className={`h-48 bg-gradient-to-br ${getThumbnailGradient(
+                      className={`h-48 bg-linear-to-br ${getThumbnailGradient(
                         pdf.title
                       )} relative overflow-hidden`}
                     >
                       <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors" />
-
-                      {/* Large Icon */}
                       <div className="absolute inset-0 flex items-center justify-center opacity-20">
                         <ThumbnailIcon
                           className="w-32 h-32 text-white"
                           strokeWidth={1}
                         />
                       </div>
-
                       <div className="absolute top-4 right-4">
                         <div className="px-3 py-1 rounded-full bg-white text-gray-900 text-sm font-semibold shadow-sm">
                           {pdf.price || "₹499"}
                         </div>
                       </div>
                     </div>
-
-                    {/* Content */}
                     <div className="p-6">
                       <h3 className="text-xl font-bold text-foreground mb-2 line-clamp-1">
                         {pdf.title || "Untitled"}
@@ -318,7 +329,6 @@ export default function PDFLibraryPage() {
                       <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
                         {pdf.description || "No description available"}
                       </p>
-
                       <button className="w-full px-4 py-2.5 bg-foreground text-background rounded-lg font-medium hover:opacity-90 transition-opacity">
                         View Details
                       </button>
@@ -329,7 +339,6 @@ export default function PDFLibraryPage() {
             </div>
           )}
 
-          {/* No Results */}
           {!isLoading && !error && filteredPDFs.length === 0 && (
             <div className="text-center py-20">
               <BookOpen className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
@@ -342,7 +351,7 @@ export default function PDFLibraryPage() {
         </div>
       </section>
 
-      {/* Product Detail Modal with Animation */}
+      {/* Product Detail Modal */}
       {selectedProduct && (
         <div
           className={`fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 transition-opacity duration-200 ${
@@ -354,17 +363,14 @@ export default function PDFLibraryPage() {
             className={`bg-card rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transition-all duration-200 ${
               isModalAnimating ? "scale-100 opacity-100" : "scale-95 opacity-0"
             }`}
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e: React.MouseEvent) => e.stopPropagation()}
           >
-            {/* Modal Header with Thumbnail */}
             <div
-              className={`h-52 bg-gradient-to-br ${getThumbnailGradient(
+              className={`h-52 bg-linear-to-br ${getThumbnailGradient(
                 selectedProduct.title
               )} relative`}
             >
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-
-              {/* Large Icon in Background */}
+              <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
               <div className="absolute inset-0 flex items-center justify-center opacity-20">
                 {(() => {
                   const Icon = getThumbnailIcon(selectedProduct.title);
@@ -373,7 +379,6 @@ export default function PDFLibraryPage() {
                   );
                 })()}
               </div>
-
               <div className="absolute bottom-6 left-6 right-6">
                 <h2 className="text-3xl font-bold text-white drop-shadow-lg">
                   {selectedProduct.title}
@@ -382,7 +387,6 @@ export default function PDFLibraryPage() {
             </div>
 
             <div className="p-8 space-y-8">
-              {/* Overview & Stats */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-2 space-y-4">
                   <h3 className="text-lg font-semibold flex items-center gap-2 text-foreground">
@@ -394,10 +398,8 @@ export default function PDFLibraryPage() {
                   </p>
                 </div>
 
-                {/* Stats Card */}
                 <div className="bg-muted/50 p-3 h-22 rounded-lg border border-border">
                   <div className="space-y-3">
-                    {/* Row 1: Pages */}
                     <div className="flex justify-between items-center">
                       <span className="text-muted-foreground text-sm">
                         Pages:
@@ -406,8 +408,6 @@ export default function PDFLibraryPage() {
                         {selectedProduct.pages || "N/A"}
                       </span>
                     </div>
-
-                    {/* Row 2: No. of PDFs */}
                     <div className="flex justify-between items-center">
                       <span className="text-muted-foreground text-sm">
                         No. of PDFs:
@@ -420,9 +420,7 @@ export default function PDFLibraryPage() {
                 </div>
               </div>
 
-              {/* What's Inside & What You'll Learn */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* What's Inside */}
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold flex items-center gap-2 text-foreground">
                     <Code className="w-5 h-5 text-indigo-600" />
@@ -443,7 +441,6 @@ export default function PDFLibraryPage() {
                   </ul>
                 </div>
 
-                {/* What You'll Learn */}
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold flex items-center gap-2 text-foreground">
                     <CheckCircle2 className="w-5 h-5 text-green-600" />
@@ -465,29 +462,30 @@ export default function PDFLibraryPage() {
                 </div>
               </div>
 
-              {/* Terms and Conditions Checkbox */}
               <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
                 <label className="flex items-start gap-3 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={acceptedTerms}
-                    onChange={(e) => setAcceptedTerms(e.target.checked)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setAcceptedTerms(e.target.checked)
+                    }
                     className="mt-1 w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                   />
                   <span className="text-sm text-muted-foreground">
                     I agree to the{" "}
                     <a
-                      href="/legal/terms"
+                      href="/terms"
                       className="text-indigo-600 hover:underline font-medium"
-                      onClick={(e) => e.stopPropagation()}
+                      onClick={(e: React.MouseEvent) => e.stopPropagation()}
                     >
                       Terms & Conditions
                     </a>{" "}
                     and{" "}
                     <a
-                      href="/legal/refund"
+                      href="/refund"
                       className="text-indigo-600 hover:underline font-medium"
-                      onClick={(e) => e.stopPropagation()}
+                      onClick={(e: React.MouseEvent) => e.stopPropagation()}
                     >
                       Refund Policy
                     </a>
@@ -497,7 +495,6 @@ export default function PDFLibraryPage() {
                 </label>
               </div>
 
-              {/* Email Input */}
               <div className="space-y-2">
                 <label className="text-sm font-medium text-foreground">
                   Email Address
@@ -506,7 +503,9 @@ export default function PDFLibraryPage() {
                   type="email"
                   placeholder="Enter your email to receive download links"
                   value={userEmail}
-                  onChange={(e) => setUserEmail(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setUserEmail(e.target.value)
+                  }
                   className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-foreground placeholder:text-muted-foreground"
                   required
                 />
@@ -517,7 +516,6 @@ export default function PDFLibraryPage() {
               </div>
             </div>
 
-            {/* Footer / CTA */}
             <div className="p-6 border-t border-border bg-muted/30 flex flex-col sm:flex-row justify-between items-center gap-4">
               <div className="flex flex-col">
                 <span className="text-sm text-muted-foreground">

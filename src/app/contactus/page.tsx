@@ -1,27 +1,43 @@
-"use client"
+"use client";
 
-import { useState } from 'react'
+import React, { useState, ChangeEvent, FormEvent } from 'react';
+
+
+interface ContactFormData {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}
 
 export default function ContactPage() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ContactFormData>({
     name: '',
     email: '',
     subject: '',
     message: ''
-  })
+  });
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    })
-  }
+  // Handle both input and textarea changes
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    const mailtoLink = `mailto:kishoraman.works@gmail.com?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`)}`
-    window.location.href = mailtoLink
-  }
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    
+    const mailtoLink = `mailto:kishoraman.works@gmail.com?subject=${encodeURIComponent(
+      formData.subject
+    )}&body=${encodeURIComponent(
+      `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
+    )}`;
+    
+    window.location.href = mailtoLink;
+  };
 
   return (
     <div className="min-h-screen mt-10 bg-muted/30">
@@ -118,11 +134,11 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* Contact Information */}
+          {/* Contact Information Column */}
           <div>
             <h2 className="text-3xl font-bold text-foreground mb-6">Other ways to reach us</h2>
             
-            {/* Email */}
+            {/* Email Box */}
             <div className="bg-card rounded-lg border border-border p-6 mb-6">
               <h3 className="text-xl font-semibold text-foreground mb-4">Email</h3>
               <p className="text-muted-foreground mb-4">
@@ -139,7 +155,7 @@ export default function ContactPage() {
               </a>
             </div>
 
-            {/* Direct Message */}
+            {/* Social Links Box */}
             <div className="bg-card rounded-lg border border-border p-6 mb-6">
               <h3 className="text-xl font-semibold text-foreground mb-4">Direct Message</h3>
               <p className="text-muted-foreground mb-4">
@@ -159,9 +175,6 @@ export default function ContactPage() {
                     <p className="font-medium text-foreground">LinkedIn</p>
                     <p className="text-sm text-muted-foreground">Professional network</p>
                   </div>
-                  <svg className="w-5 h-5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
                 </a>
 
                 <a 
@@ -175,60 +188,55 @@ export default function ContactPage() {
                   </svg>
                   <div className="flex-1">
                     <p className="font-medium text-foreground">X (Twitter)</p>
-                    <p className="text-sm text-muted-foreground">Quick updates and news</p>
+                    <p className="text-sm text-muted-foreground">Quick updates</p>
                   </div>
-                  <svg className="w-5 h-5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
                 </a>
               </div>
             </div>
 
-            {/* Response Time */}
+            {/* Response Time Info */}
             <div className="bg-muted/50 rounded-lg border border-border p-6">
               <h3 className="text-lg font-semibold text-foreground mb-3">Response Time</h3>
               <p className="text-muted-foreground text-sm leading-relaxed">
-                We typically respond to all inquiries within 24 hours during business days. For urgent matters related to purchases or technical issues, please include your payment ID or order details in your message.
+                We typically respond within 24 hours. For urgent purchase issues, please include your payment ID.
               </p>
             </div>
           </div>
-
         </div>
 
         {/* FAQ Section */}
         <div className="mt-16">
           <h2 className="text-3xl font-bold text-foreground mb-8 text-center">Frequently Asked Questions</h2>
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-card rounded-lg border border-border p-6">
-              <h3 className="text-lg font-semibold text-foreground mb-2">How do I access my purchased materials?</h3>
-              <p className="text-muted-foreground text-sm">
-                After successful payment, you'll receive an instant download link and an email with access to your materials.
-              </p>
-            </div>
-
-            <div className="bg-card rounded-lg border border-border p-6">
-              <h3 className="text-lg font-semibold text-foreground mb-2">What if I don't receive my download link?</h3>
-              <p className="text-muted-foreground text-sm">
-                Check your spam folder first. If still not received within 24 hours, contact us with your payment ID.
-              </p>
-            </div>
-
-            <div className="bg-card rounded-lg border border-border p-6">
-              <h3 className="text-lg font-semibold text-foreground mb-2">Can I get a refund?</h3>
-              <p className="text-muted-foreground text-sm">
-                Due to the digital nature of our products, refunds are only available for duplicate payments or failed deliveries. See our Refund Policy for details.
-              </p>
-            </div>
-
-            <div className="bg-card rounded-lg border border-border p-6">
-              <h3 className="text-lg font-semibold text-foreground mb-2">How can I request new topics?</h3>
-              <p className="text-muted-foreground text-sm">
-                We love hearing from our community! Send us your topic requests via email or social media, and we'll consider them for future content.
-              </p>
-            </div>
+            <FAQCard 
+              question="How do I access my purchased materials?" 
+              answer="After successful payment, you'll receive an instant download link and an email with access."
+            />
+            <FAQCard 
+              question="What if I don't receive my link?" 
+              answer="Check your spam folder. If not received within 24 hours, contact us with your payment ID."
+            />
+            <FAQCard 
+              question="Can I get a refund?" 
+              answer="Digital products are generally non-refundable except for duplicate payments or failed deliveries."
+            />
+            <FAQCard 
+              question="How can I request new topics?" 
+              answer="We love hearing from you! Send us your topic requests via email or social media."
+            />
           </div>
         </div>
       </div>
     </div>
-  )
+  );
+}
+
+// Sub-component for clean FAQ items
+function FAQCard({ question, answer }: { question: string; answer: string }) {
+  return (
+    <div className="bg-card rounded-lg border border-border p-6">
+      <h3 className="text-lg font-semibold text-foreground mb-2">{question}</h3>
+      <p className="text-muted-foreground text-sm">{answer}</p>
+    </div>
+  );
 }

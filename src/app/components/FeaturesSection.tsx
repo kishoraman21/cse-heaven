@@ -6,14 +6,26 @@ import {
   Zap,
   TrendingUp,
   BookOpen,
-  Award,
   RefreshCw,
   CheckCircle2,
+  LucideIcon,
 } from "lucide-react";
 import { Card } from "@/src/app/components/ui/card";
 import { Badge } from "@/src/app/components/ui/badge";
 
-const features = [
+
+interface Feature {
+  id: number;
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  gradient: string;
+  badge?: string;
+  stats?: string[];
+  visual?: React.ReactNode;
+}
+
+const features: Feature[] = [
   {
     id: 1,
     icon: BookOpen,
@@ -59,7 +71,8 @@ const features = [
 ];
 
 export default function FeaturesSection() {
-  const ref = useRef(null);
+  // Explicitly type the ref for a div element
+  const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
@@ -67,7 +80,7 @@ export default function FeaturesSection() {
       ref={ref}
       className="relative py-24 overflow-hidden bg-background text-foreground"
     >
-      {/* Dot Pattern */}
+      {/* Dot Pattern Background */}
       <div
         className="absolute inset-0 opacity-30"
         style={{
@@ -105,7 +118,7 @@ export default function FeaturesSection() {
           </p>
         </motion.div>
 
-        {/* Grid */}
+        {/* Features Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature) => (
             <motion.div
@@ -156,27 +169,6 @@ export default function FeaturesSection() {
             </motion.div>
           ))}
         </div>
-
-        {/* CTA */}
-        {/* <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 2, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="mt-20 text-center"
-        >
-          <p className="text-muted-foreground text-lg mb-6">
-            Ready to upgrade your learning?
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="px-8 py-4 bg-primary text-primary-foreground rounded-xl font-semibold hover:opacity-90 transition">
-              Browse All Resources
-            </button>
-            <button className="px-8 py-4 bg-card border border-border rounded-xl font-semibold hover:bg-accent transition">
-              View Sample PDFs
-            </button>
-          </div>
-        </motion.div> */}
       </div>
 
       <style jsx>{`
