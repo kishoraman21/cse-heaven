@@ -23,18 +23,18 @@ import { ModeToggle } from "@/src/app/components/ModeToggle";
 
 const navLinks = [
   { label: "Home", href: "/" },
-  {
-    label: "Categories",
-    href: "/categories",
-    subLinks: [
-      { label: "Databases", href: "/categories/databases" },
-      { label: "Algorithms", href: "/categories/algorithms" },
-      { label: "System Design", href: "/categories/system-design" },
-      { label: "Programming Languages", href: "/categories/languages" },
-    ],
-  },
-  { label: "Pricing", href: "/pricing" },
-  { label: "Blog", href: "/blog" },
+  // {
+  //   label: "Categories",
+  //   href: "/categories",
+  //   subLinks: [
+  //     { label: "Databases", href: "/categories/databases" },
+  //     { label: "Algorithms", href: "/categories/algorithms" },
+  //     { label: "System Design", href: "/categories/system-design" },
+  //     { label: "Programming Languages", href: "/categories/languages" },
+  //   ],
+  // },
+  // { label: "Pricing", href: "/pricing" },
+  // { label: "Blog", href: "/blog" },
 ];
 
 export default function Navbar() {
@@ -113,9 +113,9 @@ export default function Navbar() {
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center gap-3">
             <ModeToggle />
-            <Button variant="ghost" asChild className="font-medium">
+            {/* <Button variant="ghost" asChild className="font-medium">
               <Link href="/login">Sign In</Link>
-            </Button>
+            </Button> */}
             <Button
               asChild
               className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-lg shadow-indigo-500/30"
