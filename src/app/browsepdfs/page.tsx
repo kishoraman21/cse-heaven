@@ -69,184 +69,11 @@ const getThumbnailIcon = (title) => {
 
 // Function to get dynamic content based on title
 const getProductContent = (product) => {
-  const lowerTitle = product.title?.toLowerCase() || "";
-  
-  // DSA Content
-  if (lowerTitle.includes("dsa") || lowerTitle.includes("data structure")) {
-    return {
-      description: product.description || "Comprehensive guide covering all data structures and algorithms with detailed examples, complexity analysis, and practice problems to master DSA fundamentals.",
-      contents: product.contents || [
-        "Arrays and Strings - Core operations and problems",
-        "Linked Lists - Single, Double, and Circular",
-        "Stacks and Queues - Implementation and applications",
-        "Trees and Graphs - Traversal and algorithms",
-        "Dynamic Programming - Optimization techniques",
-        "Sorting and Searching - Efficient algorithms"
-      ],
-      outcomes: product.outcomes || [
-        "Master fundamental data structures and their operations",
-        "Solve complex algorithmic problems efficiently",
-        "Prepare confidently for technical interviews at top companies"
-      ]
-    };
-  }
-  
-  // Java Content
-  if (lowerTitle.includes("java")) {
-    return {
-      description: product.description || "Complete Java programming guide from basics to advanced OOP concepts, covering syntax, design patterns, collections framework, and best practices for enterprise development.",
-      contents: product.contents || [
-        "Java Fundamentals - Syntax and data types",
-        "Object-Oriented Programming - Classes and inheritance",
-        "Collections Framework - Lists, Sets, and Maps",
-        "Exception Handling - Try-catch and custom exceptions",
-        "Multithreading - Concurrent programming",
-        "Java 8+ Features - Streams and Lambda expressions"
-      ],
-      outcomes: product.outcomes || [
-        "Write production-ready Java code with best practices",
-        "Understand and apply OOP principles effectively",
-        "Master advanced Java features and frameworks"
-      ]
-    };
-  }
-  
-  // Web Development Content
-  if (lowerTitle.includes("html") || lowerTitle.includes("css") || lowerTitle.includes("javascript") || lowerTitle.includes("web")) {
-    return {
-      description: product.description || "Complete web development fundamentals covering HTML5, CSS3, and modern JavaScript with hands-on examples, responsive design techniques, and real-world projects.",
-      contents: product.contents || [
-        "HTML5 Semantics - Modern markup structure",
-        "CSS3 and Flexbox - Responsive layouts",
-        "JavaScript ES6+ - Modern syntax and features",
-        "DOM Manipulation - Interactive web pages",
-        "Responsive Design - Mobile-first approach",
-        "Web APIs - Fetch, Storage, and more"
-      ],
-      outcomes: product.outcomes || [
-        "Build modern, responsive websites from scratch",
-        "Understand web standards and best practices",
-        "Create interactive user interfaces with JavaScript"
-      ]
-    };
-  }
-  
-  // Database Content
-  if (lowerTitle.includes("database") || lowerTitle.includes("sql") || lowerTitle.includes("dbms")) {
-    return {
-      description: product.description || "Comprehensive database management guide covering SQL fundamentals, relational database design, normalization, indexing, and query optimization techniques.",
-      contents: product.contents || [
-        "SQL Basics - SELECT, INSERT, UPDATE, DELETE",
-        "Database Design - ER diagrams and normalization",
-        "Joins and Subqueries - Complex data retrieval",
-        "Indexing - Performance optimization",
-        "Transactions - ACID properties",
-        "Stored Procedures - Advanced database programming"
-      ],
-      outcomes: product.outcomes || [
-        "Design efficient and scalable database schemas",
-        "Write optimized SQL queries for complex operations",
-        "Understand database internals and performance tuning"
-      ]
-    };
-  }
-  
-  // System Design Content
-  if (lowerTitle.includes("system") && lowerTitle.includes("design")) {
-    return {
-      description: product.description || "Master system design concepts including scalability, reliability, distributed systems, and architectural patterns used by top tech companies.",
-      contents: product.contents || [
-        "System Design Fundamentals - Key concepts",
-        "Scalability Patterns - Horizontal and vertical scaling",
-        "Load Balancing - Distribution strategies",
-        "Caching Strategies - Redis and Memcached",
-        "Database Sharding - Data partitioning",
-        "Microservices Architecture - Design principles"
-      ],
-      outcomes: product.outcomes || [
-        "Design scalable and reliable distributed systems",
-        "Ace system design interviews at FAANG companies",
-        "Understand trade-offs in architectural decisions"
-      ]
-    };
-  }
-  
-  // Python Content
-  if (lowerTitle.includes("python")) {
-    return {
-      description: product.description || "Complete Python programming guide covering fundamentals, data structures, OOP, libraries, and advanced topics for beginners to advanced developers.",
-      contents: product.contents || [
-        "Python Basics - Syntax and data types",
-        "Data Structures - Lists, Tuples, Dictionaries",
-        "Object-Oriented Python - Classes and methods",
-        "File Handling - Reading and writing files",
-        "Libraries - NumPy, Pandas, Matplotlib",
-        "Advanced Topics - Decorators and generators"
-      ],
-      outcomes: product.outcomes || [
-        "Write clean and efficient Python code",
-        "Master Python's data structures and libraries",
-        "Build real-world applications with Python"
-      ]
-    };
-  }
-  
-  // Operating Systems Content
-  if (lowerTitle.includes("operating") || lowerTitle.includes(" os ")) {
-    return {
-      description: product.description || "Comprehensive operating systems guide covering process management, memory management, file systems, and OS architecture with practical examples.",
-      contents: product.contents || [
-        "Process Management - Scheduling algorithms",
-        "Memory Management - Paging and segmentation",
-        "File Systems - Organization and management",
-        "Deadlocks - Prevention and detection",
-        "CPU Scheduling - Various algorithms",
-        "Synchronization - Semaphores and monitors"
-      ],
-      outcomes: product.outcomes || [
-        "Understand core operating system concepts",
-        "Master process and memory management techniques",
-        "Prepare for OS-related interview questions"
-      ]
-    };
-  }
-  
-  // LeetCode/Interview Prep Content
-  if (lowerTitle.includes("leetcode") || lowerTitle.includes("interview")) {
-    return {
-      description: product.description || "Curated collection of LeetCode problems with detailed solutions, patterns, and strategies to crack technical coding interviews at top companies.",
-      contents: product.contents || [
-        "Two Pointers Pattern - Common techniques",
-        "Sliding Window - Array and string problems",
-        "Binary Search - Optimization problems",
-        "Tree Traversals - DFS and BFS",
-        "Dynamic Programming - Popular patterns",
-        "Graph Algorithms - Common interview questions"
-      ],
-      outcomes: product.outcomes || [
-        "Solve LeetCode problems efficiently",
-        "Recognize and apply problem-solving patterns",
-        "Excel in technical coding interviews"
-      ]
-    };
-  }
-  
-  // Default fallback content
+  // Return product data from API, no hardcoded fallbacks
   return {
-    description: product.description || "Comprehensive study material with detailed explanations, examples, and practice problems to master the subject.",
-    contents: product.contents || [
-      "Fundamental Concepts",
-      "Advanced Topics",
-      "Practical Examples",
-      "Problem Solving",
-      "Best Practices",
-      "Interview Preparation"
-    ],
-    outcomes: product.outcomes || [
-      "Master the fundamental concepts",
-      "Apply knowledge to real-world scenarios",
-      "Prepare for technical interviews"
-    ]
+    description: product.description || "No description available",
+    contents: product.contents || [],
+    outcomes: product.outcomes || []
   };
 };
 
@@ -557,7 +384,7 @@ export default function PDFLibraryPage() {
                   <div className="flex justify-between items-center">
                     <span className="text-muted-foreground text-sm">Pages</span>
                     <span className="font-semibold text-foreground">
-                      {selectedProduct.pages || 250}
+                      {selectedProduct.pages || "N/A"}
                     </span>
                   </div>
                 </div>
@@ -615,11 +442,11 @@ export default function PDFLibraryPage() {
                   />
                   <span className="text-sm text-muted-foreground">
                     I agree to the{" "}
-                    <a href="/terms" className="text-indigo-600 hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                    <a href="/legal/terms" className="text-indigo-600 hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
                       Terms & Conditions
                     </a>
                     {" "}and{" "}
-                    <a href="/refund" className="text-indigo-600 hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                    <a href="/legal/refund" className="text-indigo-600 hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
                       Refund Policy
                     </a>
                     . I understand that all sales are final for digital products.
