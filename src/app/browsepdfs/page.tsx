@@ -14,20 +14,39 @@ import {
   Lock,
   Braces,
   FileCode,
+  X,
 } from "lucide-react";
-import axios from "axios"
+import axios from "axios";
+import { toast } from "sonner";
 
 // Function to get thumbnail gradient based on title
 const getThumbnailGradient = (title) => {
   const lowerTitle = title?.toLowerCase() || "";
-  
-  if (lowerTitle.includes("dsa") || lowerTitle.includes("data structure") || lowerTitle.includes("algorithm")) {
+
+  if (
+    lowerTitle.includes("dsa") ||
+    lowerTitle.includes("data structure") ||
+    lowerTitle.includes("algorithm")
+  ) {
     return "from-indigo-500 via-purple-500 to-pink-500";
-  } else if (lowerTitle.includes("java") || lowerTitle.includes("python") || lowerTitle.includes("javascript")) {
+  } else if (
+    lowerTitle.includes("java") ||
+    lowerTitle.includes("python") ||
+    lowerTitle.includes("javascript")
+  ) {
     return "from-orange-500 via-red-500 to-pink-500";
-  } else if (lowerTitle.includes("web") || lowerTitle.includes("html") || lowerTitle.includes("css") || lowerTitle.includes("react")) {
+  } else if (
+    lowerTitle.includes("web") ||
+    lowerTitle.includes("html") ||
+    lowerTitle.includes("css") ||
+    lowerTitle.includes("react")
+  ) {
     return "from-blue-500 via-cyan-500 to-teal-500";
-  } else if (lowerTitle.includes("database") || lowerTitle.includes("sql") || lowerTitle.includes("dbms")) {
+  } else if (
+    lowerTitle.includes("database") ||
+    lowerTitle.includes("sql") ||
+    lowerTitle.includes("dbms")
+  ) {
     return "from-green-500 via-emerald-500 to-teal-500";
   } else if (lowerTitle.includes("system") || lowerTitle.includes("design")) {
     return "from-violet-500 via-purple-500 to-indigo-500";
@@ -37,19 +56,25 @@ const getThumbnailGradient = (title) => {
     return "from-amber-500 via-orange-500 to-red-500";
   } else if (lowerTitle.includes("network")) {
     return "from-sky-500 via-blue-500 to-indigo-500";
-  } else if (lowerTitle.includes("machine learning") || lowerTitle.includes("ai")) {
+  } else if (
+    lowerTitle.includes("machine learning") ||
+    lowerTitle.includes("ai")
+  ) {
     return "from-fuchsia-500 via-purple-500 to-indigo-500";
-  } else if (lowerTitle.includes("leetcode") || lowerTitle.includes("interview")) {
+  } else if (
+    lowerTitle.includes("leetcode") ||
+    lowerTitle.includes("interview")
+  ) {
     return "from-rose-500 via-pink-500 to-purple-500";
   }
-  
+
   return "from-indigo-500 to-purple-600";
 };
 
 // Function to get icon based on title
 const getThumbnailIcon = (title) => {
   const lowerTitle = title?.toLowerCase() || "";
-  
+
   if (lowerTitle.includes("dsa") || lowerTitle.includes("algorithm")) {
     return Code;
   } else if (lowerTitle.includes("database") || lowerTitle.includes("sql")) {
@@ -63,7 +88,7 @@ const getThumbnailIcon = (title) => {
   } else if (lowerTitle.includes("java") || lowerTitle.includes("python")) {
     return Braces;
   }
-  
+
   return FileCode;
 };
 
@@ -73,7 +98,7 @@ const getProductContent = (product) => {
   return {
     description: product.description || "No description available",
     contents: product.contents || [],
-    outcomes: product.outcomes || []
+    outcomes: product.outcomes || [],
   };
 };
 
@@ -87,6 +112,8 @@ export default function PDFLibraryPage() {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [isModalAnimating, setIsModalAnimating] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -100,6 +127,7 @@ export default function PDFLibraryPage() {
       } catch (error) {
         console.error("Error while fetching data", error);
         setError("Failed to load products. Please try again later.");
+        toast.error("Cannot complete the request now. Please try again later.");
       } finally {
         setIsLoading(false);
       }
@@ -110,50 +138,25 @@ export default function PDFLibraryPage() {
   // Fixed handleBuy function - now expects the product ID directly
   const handleBuy = async (productId) => {
     if (!acceptedTerms) {
-      alert("Please accept the terms and conditions to proceed.");
+      toast.error("Please accept the Terms & Conditions.");
       return;
     }
 
-    if (!productId) {
-      alert("Invalid product ID");
-      return;
-    }
+    if (!userEmail) return;
 
     try {
       setIsDownloading(true);
-      console.log("Downloading product with ID:", productId);
-      
-      // Call the Download API with the correct field name
-      const res = await axios.post("/api/download", { 
-        productId: productId
-      });
 
-      console.log("Download response:", res.data);
+      await axios.post("/api/download", { productId, userEmail });
 
-      const links = res.data.files; // Array of signed PDF URLs
+      toast.success(
+        "Download links sent to your email! (Valid for 15 minutes)"
+      );
 
-      if (!links || links.length === 0) {
-        alert("No files found for this product.");
-        return;
-      }
-
-      // Auto-open each PDF in a new tab
-      links.forEach((url, index) => {
-        setTimeout(() => {
-          window.open(url, "_blank");
-        }, index * 300); // Stagger the openings slightly
-      });
-
-      // Success message
-      alert(`Successfully opened ${links.length} file(s)!`);
-      
-      // Close modal after successful download
       closeModal();
-      
     } catch (err) {
-      console.error("Download error:", err);
-      const errorMessage = err.response?.data?.message || "Something went wrong while downloading.";
-      alert(errorMessage);
+      console.error(err);
+      toast.error("Failed to send email");
     } finally {
       setIsDownloading(false);
     }
@@ -164,6 +167,7 @@ export default function PDFLibraryPage() {
     console.log("Opening modal for product:", product);
     setSelectedProduct(product);
     setAcceptedTerms(false);
+    setUserEmail("");
     setIsModalAnimating(true);
   };
 
@@ -173,6 +177,7 @@ export default function PDFLibraryPage() {
     setTimeout(() => {
       setSelectedProduct(null);
       setAcceptedTerms(false);
+      setUserEmail("");
     }, 200);
   };
 
@@ -283,14 +288,21 @@ export default function PDFLibraryPage() {
                     onClick={() => openModal(pdf)}
                   >
                     {/* Thumbnail with custom gradient and icon */}
-                    <div className={`h-48 bg-gradient-to-br ${getThumbnailGradient(pdf.title)} relative overflow-hidden`}>
+                    <div
+                      className={`h-48 bg-gradient-to-br ${getThumbnailGradient(
+                        pdf.title
+                      )} relative overflow-hidden`}
+                    >
                       <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors" />
-                      
+
                       {/* Large Icon */}
                       <div className="absolute inset-0 flex items-center justify-center opacity-20">
-                        <ThumbnailIcon className="w-32 h-32 text-white" strokeWidth={1} />
+                        <ThumbnailIcon
+                          className="w-32 h-32 text-white"
+                          strokeWidth={1}
+                        />
                       </div>
-                      
+
                       <div className="absolute top-4 right-4">
                         <div className="px-3 py-1 rounded-full bg-white text-gray-900 text-sm font-semibold shadow-sm">
                           {pdf.price || "₹499"}
@@ -334,35 +346,38 @@ export default function PDFLibraryPage() {
       {selectedProduct && (
         <div
           className={`fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 transition-opacity duration-200 ${
-            isModalAnimating ? 'opacity-100' : 'opacity-0'
+            isModalAnimating ? "opacity-100" : "opacity-0"
           }`}
           onClick={closeModal}
         >
           <div
             className={`bg-card rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transition-all duration-200 ${
-              isModalAnimating ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+              isModalAnimating ? "scale-100 opacity-100" : "scale-95 opacity-0"
             }`}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header with Thumbnail */}
-            <div className={`h-52 bg-gradient-to-br ${getThumbnailGradient(selectedProduct.title)} relative`}>
+            <div
+              className={`h-52 bg-gradient-to-br ${getThumbnailGradient(
+                selectedProduct.title
+              )} relative`}
+            >
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-              
+
               {/* Large Icon in Background */}
               <div className="absolute inset-0 flex items-center justify-center opacity-20">
                 {(() => {
                   const Icon = getThumbnailIcon(selectedProduct.title);
-                  return <Icon className="w-40 h-40 text-white" strokeWidth={1} />;
+                  return (
+                    <Icon className="w-40 h-40 text-white" strokeWidth={1} />
+                  );
                 })()}
               </div>
-              
+
               <div className="absolute bottom-6 left-6 right-6">
                 <h2 className="text-3xl font-bold text-white drop-shadow-lg">
                   {selectedProduct.title}
                 </h2>
-                <p className="text-white/80 text-sm mt-2">
-                  Product ID: {selectedProduct._id}
-                </p>
               </div>
             </div>
 
@@ -380,12 +395,27 @@ export default function PDFLibraryPage() {
                 </div>
 
                 {/* Stats Card */}
-                <div className="bg-muted/50 h-15 p-4 rounded-lg border border-border space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground text-sm">Pages</span>
-                    <span className="font-semibold text-foreground">
-                      {selectedProduct.pages || "N/A"}
-                    </span>
+                <div className="bg-muted/50 p-3 h-22 rounded-lg border border-border">
+                  <div className="space-y-3">
+                    {/* Row 1: Pages */}
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground text-sm">
+                        Pages:
+                      </span>
+                      <span className="font-semibold text-foreground">
+                        {selectedProduct.pages || "N/A"}
+                      </span>
+                    </div>
+
+                    {/* Row 2: No. of PDFs */}
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground text-sm">
+                        No. of PDFs:
+                      </span>
+                      <span className="font-semibold text-foreground">
+                        {selectedProduct.counts || "N/A"}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -399,15 +429,17 @@ export default function PDFLibraryPage() {
                     What's Inside
                   </h3>
                   <ul className="space-y-3">
-                    {getProductContent(selectedProduct).contents.map((item, i) => (
-                      <li
-                        key={i}
-                        className="flex items-start gap-3 text-sm text-muted-foreground"
-                      >
-                        <div className="mt-1.5 w-2 h-2 rounded-full bg-indigo-500 shrink-0" />
-                        {item}
-                      </li>
-                    ))}
+                    {getProductContent(selectedProduct).contents.map(
+                      (item, i) => (
+                        <li
+                          key={i}
+                          className="flex items-start gap-3 text-sm text-muted-foreground"
+                        >
+                          <div className="mt-1.5 w-2 h-2 rounded-full bg-indigo-500 shrink-0" />
+                          {item}
+                        </li>
+                      )
+                    )}
                   </ul>
                 </div>
 
@@ -418,15 +450,17 @@ export default function PDFLibraryPage() {
                     What You'll Learn
                   </h3>
                   <div className="space-y-3">
-                    {getProductContent(selectedProduct).outcomes.map((item, i) => (
-                      <div
-                        key={i}
-                        className="flex items-start gap-3 text-sm text-muted-foreground bg-green-50 dark:bg-green-950/20 p-3 rounded-lg border border-green-100 dark:border-green-800"
-                      >
-                        <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0 mt-0.5" />
-                        {item}
-                      </div>
-                    ))}
+                    {getProductContent(selectedProduct).outcomes.map(
+                      (item, i) => (
+                        <div
+                          key={i}
+                          className="flex items-start gap-3 text-sm text-muted-foreground bg-green-50 dark:bg-green-950/20 p-3 rounded-lg border border-green-100 dark:border-green-800"
+                        >
+                          <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0 mt-0.5" />
+                          {item}
+                        </div>
+                      )
+                    )}
                   </div>
                 </div>
               </div>
@@ -442,16 +476,44 @@ export default function PDFLibraryPage() {
                   />
                   <span className="text-sm text-muted-foreground">
                     I agree to the{" "}
-                    <a href="/legal/terms" className="text-indigo-600 hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                    <a
+                      href="/legal/terms"
+                      className="text-indigo-600 hover:underline font-medium"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       Terms & Conditions
-                    </a>
-                    {" "}and{" "}
-                    <a href="/legal/refund" className="text-indigo-600 hover:underline font-medium" onClick={(e) => e.stopPropagation()}>
+                    </a>{" "}
+                    and{" "}
+                    <a
+                      href="/legal/refund"
+                      className="text-indigo-600 hover:underline font-medium"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       Refund Policy
                     </a>
-                    . I understand that all sales are final for digital products.
+                    . I understand that all sales are final for digital
+                    products.
                   </span>
                 </label>
+              </div>
+
+              {/* Email Input */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-foreground">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  placeholder="Enter your email to receive download links"
+                  value={userEmail}
+                  onChange={(e) => setUserEmail(e.target.value)}
+                  className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-foreground placeholder:text-muted-foreground"
+                  required
+                />
+                <p className="text-xs text-muted-foreground">
+                  Download links will be sent to this email and are valid for 15
+                  minutes.
+                </p>
               </div>
             </div>
 
@@ -465,13 +527,13 @@ export default function PDFLibraryPage() {
                   {selectedProduct.price || "₹499"}
                 </span>
               </div>
-              <button 
+              <button
                 onClick={() => handleBuy(selectedProduct._id)}
-                disabled={!acceptedTerms || isDownloading}
+                disabled={!acceptedTerms || !userEmail || isDownloading}
                 className={`w-full sm:w-auto px-8 py-3.5 rounded-lg font-semibold transition-all flex items-center justify-center gap-2 ${
-                  acceptedTerms && !isDownloading
-                    ? 'bg-foreground text-background hover:opacity-90' 
-                    : 'bg-muted text-muted-foreground cursor-not-allowed'
+                  acceptedTerms && userEmail && !isDownloading
+                    ? "bg-foreground text-background hover:opacity-90"
+                    : "bg-muted text-muted-foreground cursor-not-allowed"
                 }`}
               >
                 {isDownloading ? (
@@ -487,6 +549,27 @@ export default function PDFLibraryPage() {
                 )}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Toast Notification */}
+      {showToast && (
+        <div className="fixed bottom-6 right-6 z-[100] animate-in slide-in-from-bottom-5 duration-300">
+          <div className="bg-green-600 text-white px-6 py-4 rounded-lg shadow-lg flex items-start gap-3 max-w-md">
+            <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="font-semibold">Success!</p>
+              <p className="text-sm text-green-50">
+                Download links sent to your email! (Valid for 15 minutes)
+              </p>
+            </div>
+            <button
+              onClick={() => setShowToast(false)}
+              className="text-white hover:text-green-100 transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
           </div>
         </div>
       )}
