@@ -21,10 +21,7 @@ export async function GET(req) {
     try {
       decoded = jwt.verify(jwtToken, process.env.JWT_SECRET);
     } catch (err) {
-      return NextResponse.json(
-        { message: "Invalid or expired link" },
-        { status: 401 }
-      );
+      return Response.redirect(`${process.env.BASE_URL}/error/link-expired`);
     }
 
     const { raw, productId, index } = decoded;
@@ -67,8 +64,7 @@ export async function GET(req) {
       return NextResponse.json({ message: "File not found" }, { status: 404 });
     }
 
-    // const absolutePath = path.join(process.cwd(), "src", "pdfs", fileName);
-    // const absolutePath = path.join(process.cwd(), "pdfs", filePath);
+    // const absolutePath = path.join(process.cwd(),
     const absolutePath = path.join(process.cwd(), "public", filePath);
 
     if (!fs.existsSync(absolutePath)) {
