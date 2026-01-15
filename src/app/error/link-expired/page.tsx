@@ -4,16 +4,10 @@ import { Clock, Mail, Home, ShoppingBag } from "lucide-react";
 
 export default function LinkExpiredPage() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-muted/30 px-4 py-12">
+    <div className="min-h-screen mt-10 flex flex-col items-center justify-center bg-muted/30 px-4 py-12">
       <div className="max-w-md w-full">
         {/* Error Card */}
         <div className="bg-card rounded-lg border border-border shadow-lg overflow-hidden">
-          {/* Header with Icon */}
-          {/* <div className="bg-orange-50 dark:bg-orange-950/20 border-b border-orange-200 dark:border-orange-800 p-6 flex items-center justify-center">
-            <div className="w-16 h-16 bg-orange-100 dark:bg-orange-900/30 rounded-full flex items-center justify-center">
-              <Clock className="w-8 h-8 text-orange-600 dark:text-orange-400" />
-            </div>
-          </div> */}
 
           {/* Content */}
           <div className="p-8 text-center">
