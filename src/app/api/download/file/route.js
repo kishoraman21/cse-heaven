@@ -67,15 +67,13 @@ export async function GET(req) {
       return NextResponse.json({ message: "File not found" }, { status: 404 });
     }
 
-    //Resolve PDF path relative to project root
-    // const absolutePath = path.join(process.cwd(), "pdfs", filePath);
-    const absolutePath = path.join(process.cwd(), "src", "pdfs", fileName);
-
+    // const absolutePath = path.join(process.cwd(), "src", "pdfs", fileName);
+    const absolutePath = path.join(process.cwd(), "pdfs", filePath);
 
     if (!fs.existsSync(absolutePath)) {
       return Response.redirect(`${process.env.BASE_URL}/error/file-missing`);
     }
-
+``
     // UPDATE USAGE COUNT
     tokenRecord.usedCount += 1;
     await tokenRecord.save();
