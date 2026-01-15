@@ -149,8 +149,8 @@ export default function RefundPolicy(): JSX.Element {
                 <h2 className="text-3xl font-bold mb-6">Contact Us</h2>
                 <div className="bg-muted/50 border border-border rounded-lg p-6">
                   <span className="text-muted-foreground font-medium">Email: </span>
-                  <a href="mailto:kishoraman2121@gmail.com" className="text-blue-600 dark:text-blue-400 hover:underline">
-                    kishoraman2121@gmail.com
+                  <a href="mailto:kishoraman.works@gmail.com" className="text-blue-600 dark:text-blue-400 hover:underline">
+                    kishoraman.works@gmail.com
                   </a>
                 </div>
               </section>
