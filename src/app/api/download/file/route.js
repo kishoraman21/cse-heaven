@@ -68,7 +68,9 @@ export async function GET(req) {
     }
 
     //Resolve PDF path relative to project root
-    const absolutePath = path.join(process.cwd(), "pdfs", filePath);
+    // const absolutePath = path.join(process.cwd(), "pdfs", filePath);
+    const absolutePath = path.join(process.cwd(), "src", "pdfs", fileName);
+
 
     if (!fs.existsSync(absolutePath)) {
       return Response.redirect(`${process.env.BASE_URL}/error/file-missing`);
