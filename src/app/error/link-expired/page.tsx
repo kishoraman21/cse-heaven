@@ -1,4 +1,6 @@
-import { Clock, Mail, Home, ShoppingBag } from 'lucide-react'
+"use client";
+
+import { Clock, Mail, Home, ShoppingBag } from "lucide-react";
 
 export default function LinkExpiredPage() {
   return (
@@ -20,23 +22,36 @@ export default function LinkExpiredPage() {
             </h1>
 
             <p className="text-muted-foreground mb-6 leading-relaxed">
-              This download link has expired. For security reasons, download links are only valid for a limited time after purchase.
+              This download link has expired. For security reasons, download
+              links are only valid for a limited time after purchase.
             </p>
 
             <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
-              <h3 className="text-sm font-semibold text-foreground mb-2">How to get a new link:</h3>
+              <h3 className="text-sm font-semibold text-foreground mb-2">
+                How to get a new link:
+              </h3>
               <ul className="text-sm text-muted-foreground text-left space-y-2">
                 <li className="flex items-start gap-2">
-                  <span className="text-blue-600 dark:text-blue-400 mt-0.5">1.</span>
+                  <span className="text-blue-600 dark:text-blue-400 mt-0.5">
+                    1.
+                  </span>
                   <span>Contact our support team with your order details</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-blue-600 dark:text-blue-400 mt-0.5">2.</span>
-                  <span>We'll verify your purchase and send a fresh download link</span>
+                  <span className="text-blue-600 dark:text-blue-400 mt-0.5">
+                    2.
+                  </span>
+                  <span>
+                    We'll verify your purchase and send a fresh download link
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-blue-600 dark:text-blue-400 mt-0.5">3.</span>
-                  <span>Download your files within the new validity period</span>
+                  <span className="text-blue-600 dark:text-blue-400 mt-0.5">
+                    3.
+                  </span>
+                  <span>
+                    Download your files within the new validity period
+                  </span>
                 </li>
               </ul>
             </div>
@@ -70,7 +85,9 @@ export default function LinkExpiredPage() {
                 Valid Purchases Get New Links
               </h3>
               <p className="text-sm text-muted-foreground">
-                If you've purchased this product, you're entitled to receive a fresh download link. Simply contact us with your transaction details and we'll help you immediately.
+                If you've purchased this product, you're entitled to receive a
+                fresh download link. Simply contact us with your transaction
+                details and we'll help you immediately.
               </p>
             </div>
           </div>
@@ -79,9 +96,7 @@ export default function LinkExpiredPage() {
         {/* Support Section */}
         <div className="mt-4 bg-muted/50 border border-border rounded-lg p-4">
           <div className="text-center">
-            <p className="text-sm text-muted-foreground mb-2">
-              Email us at:
-            </p>
+            <p className="text-sm text-muted-foreground mb-2">Email us at:</p>
             <a
               href="mailto:kishoraman2121@gmail.com"
               className="text-base font-semibold text-indigo-600 dark:text-indigo-400 hover:underline"
@@ -98,16 +113,22 @@ export default function LinkExpiredPage() {
         <div className="mt-4 text-center">
           <p className="text-sm text-muted-foreground">
             Check our{" "}
-            <a href="/refund" className="text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
+            <a
+              href="/refund"
+              className="text-indigo-600 dark:text-indigo-400 hover:underline font-medium"
+            >
               Refund Policy
-            </a>
-            {" "}or browse{" "}
-            <a href="/browsepdfs" className="text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
+            </a>{" "}
+            or browse{" "}
+            <a
+              href="/browsepdfs"
+              className="text-indigo-600 dark:text-indigo-400 hover:underline font-medium"
+            >
               Other Resources
             </a>
           </p>
         </div>
       </div>
     </div>
-  )
+  );
 }
