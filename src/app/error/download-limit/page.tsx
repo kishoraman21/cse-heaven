@@ -1,3 +1,5 @@
+"use client"
+
 import { AlertCircle, Mail, Home } from 'lucide-react'
 
 export default function DownloadLimitPage() {
