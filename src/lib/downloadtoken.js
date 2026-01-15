@@ -10,6 +10,4 @@ export function secureToken(productId, index) {
   return { raw, jwtToken };
 }
 
-export function verifyToken(jwtToken) {
-  return jwt.verify(token, process.env.JWT_SECRET);
-}
+

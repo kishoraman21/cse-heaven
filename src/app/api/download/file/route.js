@@ -3,7 +3,7 @@ import path from "path";
 import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
 import DownloadToken from "@/models/DownloadToken";
-import { connect } from "@/dbConfig/connectDB";
+import { connect } from "@/db/connectDB";
 
 export async function GET(req) {
   try {

@@ -1,5 +1,5 @@
-import {connect} from "@/dbConfig/connectDB"
-import Product from "@/models/product";
+import {connect} from "@/db/connectDB"
+import product from "@/models/product";
 import nodemailer from "nodemailer";
 import { secureToken } from "@/lib/downloadtoken";
 import DownloadToken from "@/models/DownloadToken";
@@ -10,15 +10,15 @@ export async function POST(req) {
 
     const { productId, userEmail } = await req.json();
 
-    const product = await Product.findById(productId);
-    if (!product || !product.files?.length) {
+    const products = await product.findById(productId);
+    if (!products || !products.files?.length) {
       return Response.json({ message: "No files found" }, { status: 404 });
     }
 
     // download links 
     const downloadLinks = [];
 
-    for (let index = 0; index < product.files.length; index++) {
+    for (let index = 0; index < products.files.length; index++) {
       const { raw, jwtToken } = secureToken(productId, index);
 
       await DownloadToken.create({
@@ -121,7 +121,7 @@ export async function POST(req) {
     await transporter.sendMail({
       from: `"CSEHeavens" <${process.env.MAIL_USER}>`,
       to: userEmail,
-      subject: `Your Downloads for ${product.title}`,
+      subject: `Your Downloads for ${products.title}`,
       html,
     });
 
