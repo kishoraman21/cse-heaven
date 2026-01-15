@@ -34,7 +34,7 @@ export default function DownloadLimitPage() {
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-3">
               <a
-                href="mailto:kishoraman2121@gmail.com"
+                href="mailto:kishoraman.works@gmail.com"
                 className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 bg-card text-foreground border border-border rounded-lg font-medium hover:bg-muted transition-colors"
               >
                 <Mail className="w-4 h-4" />
@@ -55,11 +55,11 @@ export default function DownloadLimitPage() {
         <div className="mt-6 text-center">
           <p className="text-sm text-muted-foreground">
             Need help? Visit our{" "}
-            <a href="/help" className="text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
+            <a href="/contact" className="text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
               Help Center
             </a>
             {" "}or check our{" "}
-            <a href="/legal/refund" className="text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
+            <a href="/refund" className="text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
               Refund Policy
             </a>
           </p>
