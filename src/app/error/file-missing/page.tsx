@@ -1,3 +1,4 @@
+"use client"
 import { FileX, Mail, Home, RefreshCw } from 'lucide-react'
 
 export default function FileMissingPage() {
