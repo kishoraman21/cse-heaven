@@ -10,8 +10,8 @@ import {
   CheckCircle2,
   LucideIcon,
 } from "lucide-react";
-import { Card } from "@/src/app/components/ui/card";
-import { Badge } from "@/src/app/components/ui/badge";
+import { Card } from "@/app/components/ui/card";
+import { Badge } from "@/app/components/ui/badge";
 
 
 interface Feature {

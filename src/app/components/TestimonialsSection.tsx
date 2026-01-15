@@ -1,6 +1,6 @@
 "use client"
 
-import { Card } from '@/src/app/components/ui/card'
+import { Card } from '@/app/components/ui/card'
 
 const testimonials = [
   {

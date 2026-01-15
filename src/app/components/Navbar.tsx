@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { BookOpen, Menu, ChevronDown } from "lucide-react";
-import { Button } from "@/src/app/components/ui/button";
+import { Button } from "@/app/components/ui/button";
 import { useRouter } from "next/navigation";
 import {
   Sheet,
@@ -12,14 +12,14 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/src/app/components/ui/sheet";
+} from "@/app/components/ui/sheet";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/src/app/components/ui/dropdown-menu";
-import { ModeToggle } from "@/src/app/components/ModeToggle";
+} from "@/app/components/ui/dropdown-menu";
+import { ModeToggle } from "@/app/components/ModeToggle";
 
 
 interface SubLink {

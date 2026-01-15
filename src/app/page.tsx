@@ -1,7 +1,7 @@
-import FeaturesSection from "@/src/app/components/FeaturesSection"
-import FooterSection from "@/src/app/components/FooterSection"
-import HeroSection from "@/src/app/components/HeroSection"
-import TestimonialsSection from "@/src/app/components/TestimonialsSection"
+import FeaturesSection from "@/app/components/FeaturesSection"
+import FooterSection from "@/app/components/FooterSection"
+import HeroSection from "@/app/components/HeroSection"
+import TestimonialsSection from "@/app/components/TestimonialsSection"
 
 
 export default function HomePage() {

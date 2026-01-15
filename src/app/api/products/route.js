@@ -1,11 +1,11 @@
-import { connect } from "../../../dbConfig/connectDB";
-import product from "../../../models/product";
+import { connect } from "@/dbConfig/connectDB";
+import Product from "@/models/product";
 
 export async function GET() {
   try {
     await connect();
 
-    const products = await product
+    const products = await Product
       .find({ isActive: true })
       .select("title category price description pages outcomes contents counts")
       .sort({ createdAt: -1 });

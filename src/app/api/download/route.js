@@ -1,8 +1,8 @@
-import { connect } from "../../../dbConfig/connectDB";
-import Product from "../../../models/product";
+import {connect} from "@/dbConfig/connectDB"
+import Product from "@/models/product";
 import nodemailer from "nodemailer";
-import { secureToken } from "../../../lib/downloadtoken";
-import DownloadToken from "../../../models/DownloadToken";
+import { secureToken } from "@/lib/downloadtoken";
+import DownloadToken from "@/models/DownloadToken";
 
 export async function POST(req) {
   try {

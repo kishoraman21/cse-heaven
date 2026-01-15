@@ -13,9 +13,9 @@ import {
   Download,
   LucideIcon,
 } from "lucide-react";
-import { Button } from "@/src/app/components/ui/button";
-import { Badge } from "@/src/app/components/ui/badge";
-import { Card } from "@/src/app/components/ui/card";
+import { Button } from "@/app/components/ui/button";
+import { Badge } from "@/app/components/ui/badge";
+import { Card } from "@/app/components/ui/card";
 
 
 interface HeroFeature {
