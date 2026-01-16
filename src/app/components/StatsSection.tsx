@@ -90,47 +90,45 @@ export default function StatsSection() {
         </motion.p>
       </div>
 
-      {/* Infinite Scroll Marquee */}
-      <div className="relative">
-        {/* Fade edges */}
-        <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+      <div className="relative mt-8">
+        <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-background via-background/80 to-transparent z-20 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-background via-background/80 to-transparent z-20 pointer-events-none" />
 
-        <div className="flex animate-marquee">
-          {duplicatedTech.map((tech, index) => (
-            <div
-              key={`${tech.name}-${index}`}
-              className="flex-shrink-0 mx-8 flex flex-col items-center gap-2 group"
-            >
-              <div className="p-4 rounded-xl bg-secondary/50 border border-border/50 text-muted-foreground group-hover:text-foreground group-hover:border-primary/30 group-hover:bg-secondary transition-all duration-300">
-                {tech.icon}
+        <div className="overflow-hidden">
+          <motion.div 
+            className="flex w-max py-4"
+            animate={{
+              x: ["0%", "-25%"],
+            }}
+            transition={{
+              x: {
+                repeat: Infinity,
+                repeatType: "loop",
+                duration: 25,
+                ease: "linear",
+              },
+            }}
+          >
+            {[...Array(4)].map((_, setIndex) => (
+              <div key={`set-${setIndex}`} className="flex">
+                {technologies.map((tech, index) => (
+                  <div
+                    key={`${setIndex}-${tech.name}-${index}`}
+                    className="flex-shrink-0 px-10 flex flex-col items-center gap-3 group"
+                  >
+                    <div className="p-5 rounded-2xl bg-secondary/30 border border-border/50 text-muted-foreground group-hover:text-primary group-hover:border-primary/30 group-hover:bg-primary/5 group-hover:shadow-lg group-hover:shadow-primary/5 transition-all duration-500">
+                      {tech.icon}
+                    </div>
+                    <span className="text-xs font-bold tracking-tight text-muted-foreground group-hover:text-foreground transition-colors" style={{ fontFamily: 'var(--font-space-grotesk)' }}>
+                      {tech.name}
+                    </span>
+                  </div>
+                ))}
               </div>
-              <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors">
-                {tech.name}
-              </span>
-            </div>
-          ))}
+            ))}
+          </motion.div>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes marquee {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-
-        .animate-marquee {
-          animation: marquee 20s linear infinite;
-        }
-
-        .animate-marquee:hover {
-          animation-play-state: paused;
-        }
-      `}</style>
     </section>
   );
 }

@@ -54,12 +54,12 @@ const features: Feature[] = [
   },
   {
     id: 3,
-    icon: RefreshCw,
-    title: "Regular Updates",
+    icon: Code2,
+    title: "DSA Mastery",
     description:
-      "Content updated weekly with latest company patterns.",
-    gradient: "from-emerald-600 to-teal-500",
-    iconBg: "bg-emerald-500/10",
+      "Complete data structures and algorithms guide with interview patterns.",
+    gradient: "from-rose-600 to-pink-500",
+    iconBg: "bg-rose-500/10",
     className: "lg:col-span-1 lg:row-span-1",
   },
   {
@@ -72,26 +72,6 @@ const features: Feature[] = [
     gradient: "from-violet-600 to-purple-500",
     iconBg: "bg-violet-500/10",
     stats: ["95% Success", "1000+ Qs"],
-    className: "lg:col-span-2 lg:row-span-1",
-  },
-  {
-    id: 5,
-    icon: Code2,
-    title: "DSA Mastery",
-    description:
-      "Complete data structures and algorithms guide with interview patterns.",
-    gradient: "from-rose-600 to-pink-500",
-    iconBg: "bg-rose-500/10",
-    className: "lg:col-span-1 lg:row-span-1",
-  },
-  {
-    id: 6,
-    icon: Users,
-    title: "Community Support",
-    description:
-      "Join thousands of students. Share resources and tips.",
-    gradient: "from-indigo-600 to-blue-500",
-    iconBg: "bg-indigo-500/10",
     className: "lg:col-span-2 lg:row-span-1",
   },
 ];
@@ -124,12 +104,10 @@ export default function FeaturesSection() {
 
   return (
     <section ref={ref} className="relative py-24 bg-background">
-      {/* Subtle Grid Background */}
       <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none dark:opacity-[0.05]" 
            style={{ backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
         <div className="mb-16">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -137,9 +115,11 @@ export default function FeaturesSection() {
             transition={{ duration: 0.5 }}
             className="flex items-center gap-2 text-primary mb-4"
           >
+            <div className="h-[1px] w-12 bg-primary/30" />
             <span className="text-sm font-bold tracking-widest uppercase" style={{ fontFamily: 'var(--font-space-grotesk)' }}>
               Core Advantages
             </span>
+            <div className="h-[1px] w-12 bg-primary/30" />
           </motion.div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-end">
@@ -147,10 +127,10 @@ export default function FeaturesSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight"
+              className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tighter leading-[1.1]"
+              style={{ fontFamily: 'var(--font-space-grotesk)' }}
             >
-              Fueling your 
-              <span className="block text-primary">career transition.</span>
+              Fueling your <span className="text-primary italic">career transition.</span>
             </motion.h2>
             
             <motion.p
@@ -158,6 +138,7 @@ export default function FeaturesSection() {
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.2 }}
               className="text-lg text-muted-foreground max-w-md"
+              style={{ fontFamily: 'var(--font-space-grotesk)' }}
             >
               We provide the tools and insights needed to navigate the competitive 
               landscape of modern software engineering placements.
@@ -165,7 +146,6 @@ export default function FeaturesSection() {
           </div>
         </div>
 
-        {/* Bento Grid */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -180,7 +160,6 @@ export default function FeaturesSection() {
             >
               <Card className="h-full relative overflow-hidden bg-card border-border/50 hover:border-primary/50 transition-all duration-500 shadow-sm hover:shadow-xl hover:shadow-primary/5">
                 <div className="p-8 flex flex-col h-full">
-                  {/* Decorative Gradient Background */}
                   <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${feature.gradient} opacity-[0.03] group-hover:opacity-10 rounded-bl-full transition-opacity duration-500`} />
                   
                   <div className="relative z-10 flex flex-col h-full">
@@ -214,7 +193,6 @@ export default function FeaturesSection() {
                         </div>
                       ) : (
                         <div className="flex items-center text-xs font-semibold text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                          Learn More <ArrowRight className="w-3 h-3 ml-1" />
                         </div>
                       )}
                     </div>

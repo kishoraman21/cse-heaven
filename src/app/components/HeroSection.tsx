@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 
-// Icon images from public/icons folder
 const floatingIcons = [
   {
     src: "/icons/python.png",
@@ -65,7 +64,6 @@ export default function HeroSection() {
         }}
       />
 
-      {/* Decorative Connecting Lines */}
       <svg
         className="absolute inset-0 w-full h-full pointer-events-none opacity-20"
         xmlns="http://www.w3.org/2000/svg"
@@ -82,7 +80,6 @@ export default function HeroSection() {
             <circle cx="2" cy="2" r="1" fill="currentColor" className="text-slate-400" />
           </pattern>
         </defs>
-        {/* Curved dotted lines connecting icons */}
         <path
           d="M 100 200 Q 300 100 500 250"
           fill="none"
@@ -109,11 +106,9 @@ export default function HeroSection() {
         />
       </svg>
 
-      {/* Floating Gradient Orbs */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-purple-300/20 to-blue-300/20 rounded-full blur-3xl animate-pulse" />
       <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gradient-to-r from-cyan-300/20 to-indigo-300/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
 
-      {/* Floating Tech Icons */}
       {floatingIcons.map((icon, index) => (
         <motion.div
           key={icon.alt}
@@ -142,73 +137,38 @@ export default function HeroSection() {
         </motion.div>
       ))}
 
-      {/* Main Content */}
       <div className="relative z-20 flex flex-col items-center justify-center min-h-screen px-4 pt-20">
        
 
-        {/* Main Heading */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
           className="text-center max-w-4xl mx-auto"
         >
-          <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-slate-800 dark:text-white leading-tight">
-            The Ultimate Arsenal for
-            <span className="block mt-2 font-serif italic bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-[1.1] text-slate-900 dark:text-white" style={{ fontFamily: 'var(--font-space-grotesk)' }}>
+            The Ultimate Arsenal for your
+            <span className="block mt-2 text-primary italic">
               CS Engineering.
             </span>
           </h1>
         </motion.div>
 
-        {/* Subheading */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
           className="mt-6 text-lg md:text-xl text-slate-600 dark:text-slate-400 text-center max-w-2xl"
+          style={{ fontFamily: 'var(--font-space-grotesk)' }}
         >
           Stop searching for scattered notes. Get instant access to premium resources for DSA, Java, SQL, and everything in between.
         </motion.p>
 
-        {/* CTA Button */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="mt-10"
-        >
-          <Link href="/browsepdfs">
-            <motion.button
-              className="group relative px-8 py-4 rounded-full bg-slate-800 dark:bg-white text-white dark:text-slate-900 font-semibold text-lg shadow-xl shadow-slate-400/30 dark:shadow-slate-900/30 overflow-hidden transition-all duration-300"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <span className="relative z-10 flex items-center gap-2">
-                Explore Courses
-                <svg
-                  className="w-5 h-5 transition-transform group-hover:translate-x-1"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 7l5 5m0 0l-5 5m5-5H6"
-                  />
-                </svg>
-              </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            </motion.button>
-          </Link>
-        </motion.div>
+        
 
 
       </div>
 
-      {/* Bottom Gradient Fade */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white dark:from-slate-950 to-transparent pointer-events-none" />
 
       <style jsx>{`

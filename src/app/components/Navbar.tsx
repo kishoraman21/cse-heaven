@@ -35,7 +35,7 @@ interface NavLink {
 }
 
 const navLinks: NavLink[] = [
-  { label: "Resources", href: "/browsepdfs" },
+  { label: "FAQs", href: "/#faqs" },
   { label: "About", href: "/aboutus" },
   { label: "Contact", href: "/contactus" },
 ];
@@ -88,18 +88,34 @@ export default function Navbar() {
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-1">
-            {navLinks.map((link) =>
+            {navLinks.map((link, idx) =>
               link.subLinks ? (
-                <DropdownMenu key={link.label}>
-                  <DropdownMenuTrigger className="flex items-center gap-1 px-4 py-2 text-muted-foreground hover:text-foreground rounded-md font-medium transition-colors group outline-none">
-                    {link.label}
-                    <ChevronDown className="w-4 h-4 transition-transform group-data-[state=open]:rotate-180" />
+                <DropdownMenu key={`${link.label}-${idx}`}>
+                  <DropdownMenuTrigger asChild>
+                    <motion.button 
+                      whileHover="hover"
+                      className="relative flex items-center gap-1 px-4 py-2 text-muted-foreground hover:text-foreground rounded-md font-medium transition-colors group outline-none"
+                    >
+                      <span className="relative z-10 flex items-center gap-1">
+                        {link.label}
+                        <ChevronDown className="w-4 h-4 transition-transform group-data-[state=open]:rotate-180" />
+                      </span>
+                      <motion.span 
+                        className="absolute bottom-1 left-4 right-4 h-0.5 bg-primary origin-left"
+                        variants={{
+                          initial: { scaleX: 0 },
+                          hover: { scaleX: 1 }
+                        }}
+                        initial="initial"
+                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                      />
+                      <div className="absolute inset-0 bg-secondary/0 group-hover:bg-secondary/50 rounded-md transition-colors -z-10" />
+                    </motion.button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start" className="w-48">
-                    {link.subLinks.map((subLink) => (
-                      <DropdownMenuItem key={subLink.label} asChild>
+                    {link.subLinks.map((subLink, subIdx) => (
+                      <DropdownMenuItem key={`${subLink.label}-${subIdx}`} asChild>
                         <Link href={subLink.href} className="cursor-pointer w-full">
                           {subLink.label}
                         </Link>
@@ -108,30 +124,49 @@ export default function Navbar() {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  className="px-4 py-2 text-muted-foreground hover:text-foreground font-medium transition-colors rounded-md hover:bg-secondary"
-                >
-                  {link.label}
-                </Link>
+                <motion.div key={`${link.label}-${idx}`} whileHover="hover" className="relative">
+                  <Link
+                    href={link.href}
+                    className="relative px-4 py-2 text-muted-foreground hover:text-foreground font-medium transition-colors rounded-md group flex items-center"
+                  >
+                    <span className="relative z-10">{link.label}</span>
+                    <motion.span 
+                      className="absolute bottom-1 left-4 right-4 h-0.5 bg-primary origin-left"
+                      variants={{
+                        initial: { scaleX: 0 },
+                        hover: { scaleX: 1 }
+                      }}
+                      initial="initial"
+                      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                    />
+                    <div className="absolute inset-0 bg-secondary/0 group-hover:bg-secondary/50 rounded-md transition-colors -z-10" />
+                  </Link>
+                </motion.div>
               )
             )}
           </div>
 
-          {/* CTA Buttons */}
           <div className="hidden md:flex items-center gap-3">
             <ModeToggle />
-            <Button
-              onClick={handleBrowse}
-              className="bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white font-semibold"
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              Browse PDFs
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
+              <Button
+                onClick={handleBrowse}
+                className="relative bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white font-semibold overflow-hidden group shadow-lg shadow-blue-500/20"
+              >
+                <motion.div 
+                  className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-12"
+                />
+                <span className="relative flex items-center">
+                  Browse PDFs
+                  <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+                </span>
+              </Button>
+            </motion.div>
           </div>
 
-          {/* Mobile Menu */}
           <div className="flex md:hidden items-center gap-2">
             <ModeToggle />
             <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
@@ -159,17 +194,17 @@ export default function Navbar() {
                 </SheetHeader>
 
                 <div className="flex flex-col gap-1 mt-8">
-                  {navLinks.map((link) => (
-                    <div key={link.label}>
+                  {navLinks.map((link, idx) => (
+                    <div key={`${link.label}-${idx}`}>
                       {link.subLinks ? (
                         <div className="space-y-1">
                           <p className="font-medium text-foreground px-3 py-2">
                             {link.label}
                           </p>
                           <div className="pl-4 space-y-1">
-                            {link.subLinks.map((subLink) => (
+                            {link.subLinks.map((subLink, subIdx) => (
                               <Link
-                                key={subLink.label}
+                                key={`${subLink.label}-${subIdx}`}
                                 href={subLink.href}
                                 className="block px-3 py-2 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-md transition-colors"
                                 onClick={() => setMobileOpen(false)}

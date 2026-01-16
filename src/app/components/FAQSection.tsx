@@ -58,7 +58,6 @@ export default function FAQSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
           
-          {/* Left Column: Heading & Context */}
           <div className="lg:col-span-5 lg:sticky lg:top-32 mb-12 lg:mb-0">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
@@ -121,7 +120,6 @@ export default function FAQSection() {
             </motion.div>
           </div>
 
-          {/* Right Column: Dynamic Cards */}
           <div className="lg:col-span-7 flex flex-col gap-4">
             {faqs.map((faq) => (
               <motion.div
