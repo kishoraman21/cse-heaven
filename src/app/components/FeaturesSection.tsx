@@ -8,11 +8,14 @@ import {
   BookOpen,
   RefreshCw,
   CheckCircle2,
+  Code2,
+  Users,
   LucideIcon,
+  Sparkles,
+  ArrowRight,
 } from "lucide-react";
 import { Card } from "@/ui/card";
 import { Badge } from "@/ui/badge";
-
 
 interface Feature {
   id: number;
@@ -20,9 +23,10 @@ interface Feature {
   title: string;
   description: string;
   gradient: string;
+  iconBg: string;
   badge?: string;
   stats?: string[];
-  visual?: React.ReactNode;
+  className: string;
 }
 
 const features: Feature[] = [
@@ -32,159 +36,195 @@ const features: Feature[] = [
     badge: "Most Popular",
     title: "Curated Learning Paths",
     description:
-      "Expert-designed PDFs covering everything from data structures to system design. Each resource is reviewed by industry professionals.",
-    gradient: "from-cyan-500 to-blue-500",
-    stats: ["500+ PDFs", "50+ Topics"],
-    visual: (
-      <div className="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tr from-cyan-400/20 to-blue-400/20 rounded-full blur-2xl" />
-    ),
+      "Expert-designed PDFs covering everything from basics to system design. Reviewed by industry professionals and placement experts.",
+    gradient: "from-blue-600 to-cyan-500",
+    iconBg: "bg-blue-500/10",
+    stats: ["500+ PDFs", "50+ Topics", "100% Free"],
+    className: "lg:col-span-2 lg:row-span-1",
   },
   {
     id: 2,
     icon: Zap,
     title: "Instant Access",
     description:
-      "Download immediately after purchase. No waiting, no delays. Start learning right away.",
-    gradient: "from-amber-500 to-orange-500",
+      "No waiting. Access premium resources immediately and start your preparation right away.",
+    gradient: "from-amber-600 to-orange-500",
+    iconBg: "bg-amber-500/10",
+    className: "lg:col-span-1 lg:row-span-1",
   },
   {
     id: 3,
     icon: RefreshCw,
-    title: "Lifetime Access",
+    title: "Regular Updates",
     description:
-      "Buy once, access forever. All future updates included at no extra cost.",
-    gradient: "from-rose-500 to-red-500",
+      "Content updated weekly with latest company patterns.",
+    gradient: "from-emerald-600 to-teal-500",
+    iconBg: "bg-emerald-500/10",
+    className: "lg:col-span-1 lg:row-span-1",
   },
   {
     id: 4,
     icon: TrendingUp,
-    badge: "Premium",
+    badge: "Placement",
     title: "Interview Preparation",
     description:
-      "Focused content to help you crack interviews at top tech companies.",
-    gradient: "from-purple-500 to-pink-500",
-    stats: ["95% Success Rate", "1000+ Questions"],
-    visual: (
-      <div className="absolute top-0 left-0 w-40 h-40 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-3xl" />
-    ),
+      "Focused content to help you crack interviews at top tech companies. Real questions from FAANG and product-based companies.",
+    gradient: "from-violet-600 to-purple-500",
+    iconBg: "bg-violet-500/10",
+    stats: ["95% Success", "1000+ Qs"],
+    className: "lg:col-span-2 lg:row-span-1",
+  },
+  {
+    id: 5,
+    icon: Code2,
+    title: "DSA Mastery",
+    description:
+      "Complete data structures and algorithms guide with interview patterns.",
+    gradient: "from-rose-600 to-pink-500",
+    iconBg: "bg-rose-500/10",
+    className: "lg:col-span-1 lg:row-span-1",
+  },
+  {
+    id: 6,
+    icon: Users,
+    title: "Community Support",
+    description:
+      "Join thousands of students. Share resources and tips.",
+    gradient: "from-indigo-600 to-blue-500",
+    iconBg: "bg-indigo-500/10",
+    className: "lg:col-span-2 lg:row-span-1",
   },
 ];
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut",
+    },
+  },
+};
+
 export default function FeaturesSection() {
-  // Explicitly type the ref for a div element
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
 
   return (
-    <section
-      ref={ref}
-      className="relative py-24 overflow-hidden bg-background text-foreground"
-    >
-      {/* Dot Pattern Background */}
-      <div
-        className="absolute inset-0 opacity-30"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle, hsl(var(--border)) 1px, transparent 1px)",
-          backgroundSize: "40px 40px",
-        }}
-      />
+    <section ref={ref} className="relative py-24 bg-background">
+      {/* Subtle Grid Background */}
+      <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none dark:opacity-[0.05]" 
+           style={{ backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
 
-      {/* Floating Orbs */}
-      <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-cyan-500/20 rounded-full blur-3xl animate-blob" />
-      <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl animate-blob animation-delay-2000" />
-
-      <div className="relative max-w-7xl mx-auto px-4">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <Badge className="mb-4 bg-primary text-primary-foreground">
-            Features
-          </Badge>
-
-          <h2 className="text-4xl sm:text-5xl font-bold mb-4">
-            Everything you need to
-            <span className="block mt-2 bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent">
-              excel in your tech career
+        <div className="mb-16">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.5 }}
+            className="flex items-center gap-2 text-primary mb-4"
+          >
+            <span className="text-sm font-bold tracking-widest uppercase" style={{ fontFamily: 'var(--font-space-grotesk)' }}>
+              Core Advantages
             </span>
-          </h2>
+          </motion.div>
 
-          <p className="text-muted-foreground text-lg max-w-3xl mx-auto">
-            Premium resources from fundamentals to advanced interview prep.
-          </p>
-        </motion.div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-end">
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight"
+            >
+              Fueling your 
+              <span className="block text-primary">career transition.</span>
+            </motion.h2>
+            
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="text-lg text-muted-foreground max-w-md"
+            >
+              We provide the tools and insights needed to navigate the competitive 
+              landscape of modern software engineering placements.
+            </motion.p>
+          </div>
+        </div>
 
-        {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Bento Grid */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+        >
           {features.map((feature) => (
             <motion.div
               key={feature.id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5 }}
-              whileHover={{ y: -8 }}
-              className={feature.id === 1 || feature.id === 4 ? "lg:col-span-2" : ""}
+              variants={itemVariants}
+              className={`${feature.className} group`}
             >
-              <Card className="relative h-full p-8 bg-card border-border hover:shadow-xl transition-all overflow-hidden">
-                {feature.visual}
-
-                {feature.badge && (
-                  <Badge className="mb-4 bg-muted text-foreground">
-                    {feature.badge}
-                  </Badge>
-                )}
-
-                <div
-                  className={`w-14 h-14 rounded-xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-6`}
-                >
-                  <feature.icon className="w-7 h-7 text-white" />
-                </div>
-
-                <h3 className="text-2xl font-bold mb-3">
-                  {feature.title}
-                </h3>
-
-                <p className="text-muted-foreground mb-6">
-                  {feature.description}
-                </p>
-
-                {feature.stats && (
-                  <div className="flex flex-wrap gap-3">
-                    {feature.stats.map((stat, i) => (
-                      <div
-                        key={i}
-                        className="flex items-center gap-2 bg-muted px-4 py-2 rounded-full"
-                      >
-                        <CheckCircle2 className="w-4 h-4 text-primary" />
-                        <span className="font-medium">{stat}</span>
+              <Card className="h-full relative overflow-hidden bg-card border-border/50 hover:border-primary/50 transition-all duration-500 shadow-sm hover:shadow-xl hover:shadow-primary/5">
+                <div className="p-8 flex flex-col h-full">
+                  {/* Decorative Gradient Background */}
+                  <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${feature.gradient} opacity-[0.03] group-hover:opacity-10 rounded-bl-full transition-opacity duration-500`} />
+                  
+                  <div className="relative z-10 flex flex-col h-full">
+                    <div className="flex justify-between items-start mb-6">
+                      <div className={`p-3 rounded-xl ${feature.iconBg} group-hover:scale-110 transition-transform duration-300`}>
+                        <feature.icon className="w-6 h-6 text-foreground" />
                       </div>
-                    ))}
+                      {feature.badge && (
+                        <Badge variant="secondary" className="bg-secondary/50 text-[10px] uppercase tracking-tighter font-semibold">
+                          {feature.badge}
+                        </Badge>
+                      )}
+                    </div>
+
+                    <h3 className="text-xl font-bold mb-3 tracking-tight" style={{ fontFamily: 'var(--font-space-grotesk)' }}>
+                      {feature.title}
+                    </h3>
+                    
+                    <p className="text-muted-foreground text-sm leading-relaxed mb-6">
+                      {feature.description}
+                    </p>
+
+                    <div className="mt-auto flex items-end justify-between">
+                      {feature.stats ? (
+                        <div className="flex gap-2">
+                          {feature.stats.map((stat, i) => (
+                            <span key={i} className="text-[10px] font-bold text-muted-foreground bg-secondary/30 px-2 py-1 rounded">
+                              {stat}
+                            </span>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="flex items-center text-xs font-semibold text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                          Learn More <ArrowRight className="w-3 h-3 ml-1" />
+                        </div>
+                      )}
+                    </div>
                   </div>
-                )}
+                </div>
               </Card>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
-
-      <style jsx>{`
-        @keyframes blob {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          25% { transform: translate(20px, -50px) scale(1.1); }
-          50% { transform: translate(-20px, 20px) scale(0.9); }
-          75% { transform: translate(50px, 50px) scale(1.05); }
-        }
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-      `}</style>
     </section>
   );
 }

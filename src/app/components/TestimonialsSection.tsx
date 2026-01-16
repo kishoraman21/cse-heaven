@@ -1,68 +1,124 @@
-"use client"
+"use client";
 
-import { Card } from '@/ui/card'
+import React, { useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import { Card } from "@/ui/card";
+import { Star, Quote } from "lucide-react";
 
-const testimonials = [
+interface Testimonial {
+  id: number;
+  quote: string;
+  author: string;
+  role: string;
+  company: string;
+  rating: number;
+  avatar: string;
+}
+
+const testimonials: Testimonial[] = [
   {
     id: 1,
-    quote: "CSE Library transformed how our team prepares for interviews. The quality and depth of content is unmatched. We've seen a 40% improvement in offer rates.",
-    author: "Sarah Chen",
-    role: "Engineering Manager",
-    company: "Stripe"
+    quote: "CSE Heavens transformed how I prepared for placements. The quality and depth of content is unmatched. Landed my dream job at a top tech company!",
+    author: "Priya Sharma",
+    role: "SDE",
+    company: "Amazon",
+    rating: 5,
+    avatar: "PS",
   },
   {
     id: 2,
-    quote: "The system design resources alone are worth the investment. Clear explanations, real-world examples, and up-to-date content. Our entire team uses it daily.",
-    author: "Michael Rodriguez",
-    role: "Senior Software Engineer",
-    company: "Netflix"
+    quote: "The system design resources alone are worth it. Clear explanations, real-world examples, and up-to-date content. Helped me crack multiple offers.",
+    author: "Rahul Verma",
+    role: "Software Engineer",
+    company: "Google",
+    rating: 5,
+    avatar: "RV",
   },
   {
     id: 3,
-    quote: "Finally, a resource that doesn't oversimplify complex topics. The database PDFs helped me land my dream job at a FAANG company. Highly recommended.",
-    author: "Priya Sharma",
+    quote: "Finally, a resource that doesn't oversimplify complex topics. The DSA PDFs helped me understand patterns I was missing. Got placed in my dream company!",
+    author: "Sneha Patel",
     role: "Backend Engineer",
-    company: "Amazon"
+    company: "Microsoft",
+    rating: 5,
+    avatar: "SP",
   },
   {
     id: 4,
-    quote: "We integrated CSE Library into our onboarding process. New engineers get up to speed 3x faster. The algorithm section is particularly exceptional.",
-    author: "David Kim",
+    quote: "The algorithm section is particularly exceptional. Every PDF is well-structured and practical. Best resource for campus placements.",
+    author: "Arjun Kumar",
     role: "Tech Lead",
-    company: "Airbnb"
+    company: "Flipkart",
+    rating: 5,
+    avatar: "AK",
   },
   {
     id: 5,
-    quote: "The content quality rivals paid bootcamps at a fraction of the cost. Every PDF is well-structured and production-ready. Best investment in my career.",
-    author: "Emily Watson",
+    quote: "Content quality rivals expensive bootcamps but completely free. Every PDF is well-structured and production-ready. Must-have for any CS student.",
+    author: "Divya Reddy",
     role: "Full Stack Developer",
-    company: "Shopify"
+    company: "Swiggy",
+    rating: 5,
+    avatar: "DR",
   },
   {
     id: 6,
-    quote: "As a hiring manager, I appreciate that candidates who use CSE Library come prepared with practical knowledge, not just theoretical concepts.",
-    author: "James Liu",
-    role: "Director of Engineering",
-    company: "Meta"
-  }
-]
+    quote: "The interview preparation materials are gold. Real questions from actual interviews at top companies. Helped me ace my technical rounds.",
+    author: "Vikram Singh",
+    role: "SDE II",
+    company: "Atlassian",
+    rating: 5,
+    avatar: "VS",
+  },
+];
+
+function StarRating({ rating }: { rating: number }) {
+  return (
+    <div className="flex gap-1">
+      {[...Array(5)].map((_, i) => (
+        <Star
+          key={i}
+          className={`w-4 h-4 ${
+            i < rating
+              ? "fill-amber-400 text-amber-400"
+              : "fill-muted text-muted"
+          }`}
+        />
+      ))}
+    </div>
+  );
+}
 
 export default function TestimonialsSection() {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  
   // Duplicate testimonials for seamless infinite scroll
-  const duplicatedTestimonials = [...testimonials, ...testimonials]
+  const duplicatedTestimonials = [...testimonials, ...testimonials];
 
   return (
-    <section className="py-24 bg-background overflow-hidden">
+    <section ref={ref} className="py-24 bg-gradient-to-b from-background to-secondary/20 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
         {/* Section Header */}
-        <div className="text-left">
-          <p className="text-sm font-semibold tracking-wider uppercase text-muted-foreground mb-3">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+          className="text-center"
+        >
+          <p className="text-sm font-semibold tracking-wider uppercase text-blue-600 dark:text-blue-400 mb-3">
             Testimonials
           </p>
-          <h2 className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground">
-            What people are saying.
+          <h2 className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground mb-4">
+            Trusted by{" "}
+            <span className="bg-gradient-to-r from-blue-600 via-cyan-500 to-violet-600 dark:from-blue-400 dark:via-cyan-400 dark:to-violet-400 bg-clip-text text-transparent">
+              10,000+ students
+            </span>
           </h2>
-        </div>
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+            Join thousands of successful students who landed their dream jobs using our resources.
+          </p>
+        </motion.div>
       </div>
 
       {/* Scrolling Testimonials Container */}
@@ -74,24 +130,39 @@ export default function TestimonialsSection() {
         {/* Scrolling Track */}
         <div className="flex animate-scroll-left">
           {duplicatedTestimonials.map((testimonial, index) => (
-            <div 
+            <div
               key={`${testimonial.id}-${index}`}
               className="flex-shrink-0 w-[400px] px-3"
             >
-              <Card className="h-full p-8 bg-card border-border">
+              <Card className="h-full p-8 bg-card/50 dark:bg-card/30 backdrop-blur-sm border-border/50 hover:border-blue-500/30 hover:shadow-xl transition-all duration-300 group">
+                {/* Quote Icon */}
+                <Quote className="w-10 h-10 text-blue-500/20 mb-4" />
+                
+                {/* Rating */}
+                <div className="mb-4">
+                  <StarRating rating={testimonial.rating} />
+                </div>
+
                 {/* Quote */}
-                <blockquote className="text-foreground text-lg leading-relaxed mb-8 italic">
-                  "{testimonial.quote}"
+                <blockquote className="text-foreground text-base leading-relaxed mb-6">
+                  &ldquo;{testimonial.quote}&rdquo;
                 </blockquote>
 
                 {/* Author Info */}
-                <div>
-                  <p className="font-semibold text-foreground text-base mb-1">
-                    {testimonial.author}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    {testimonial.role} · {testimonial.company}
-                  </p>
+                <div className="flex items-center gap-4">
+                  {/* Avatar */}
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-violet-500 flex items-center justify-center text-white font-bold text-sm">
+                    {testimonial.avatar}
+                  </div>
+                  
+                  <div>
+                    <p className="font-semibold text-foreground">
+                      {testimonial.author}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {testimonial.role} · <span className="text-blue-600 dark:text-blue-400">{testimonial.company}</span>
+                    </p>
+                  </div>
                 </div>
               </Card>
             </div>
@@ -118,5 +189,5 @@ export default function TestimonialsSection() {
         }
       `}</style>
     </section>
-  )
+  );
 }
